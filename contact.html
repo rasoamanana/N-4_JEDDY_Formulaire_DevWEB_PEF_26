@@ -18,6 +18,9 @@
                     <li><a href="produits.html">Produits</a></li>
                 </ul>
                 <a href="connexion.html" class="btn-login">Login</a>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
             </div>
         </nav>
     </header>
@@ -71,6 +74,20 @@
                         localStorage.removeItem('currentUser');
                         window.location.reload();
                     }
+                });
+            }
+
+            // GESTION DU MENU BURGER
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            if(hamburger) {
+                hamburger.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    // Change l'icône
+                    const icon = hamburger.querySelector('i');
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
                 });
             }
         });

@@ -42,8 +42,15 @@ nav ul li a:hover { color: var(--mizan-blue); }
 
 /* BOUTIQUE CLAIRE */
 #mizan-shop {
-    padding: 50px 8%;
-    background-color: white;
+    padding: 120px 8% 50px; /* Top 120px pour compenser le header fixe */
+    background-color: var(--dark-bg);
+}
+
+/* Adaptation Tablette (Comme l'accueil) */
+@media (max-width: 1024px) {
+    #mizan-shop {
+        padding-top: 140px; /* Un peu plus d'espace sur tablette */
+    }
 }
 
 .products-grid {
@@ -52,88 +59,120 @@ nav ul li a:hover { color: var(--mizan-blue); }
     gap: 25px;
 }
 
+/* --- RESPONSIVE PRODUITS (SCROLL HORIZONTAL) --- */
+@media (max-width: 900px) {
+    .products-grid {
+        display: flex;
+        overflow-x: auto; /* Active le scroll horizontal */
+        scroll-snap-type: x mandatory; /* Force l'arrêt sur une carte */
+        gap: 20px;
+        padding-bottom: 30px; /* Espace pour le doigt */
+        -webkit-overflow-scrolling: touch; /* Fluidité iOS */
+    }
+
+    .card {
+        min-width: 85vw; /* La carte prend 85% de la largeur de l'écran */
+        scroll-snap-align: center; /* Se centre automatiquement */
+    }
+}
+
+/* --- AJUSTEMENTS ULTRA-PETITS ÉCRANS (< 360px) --- */
+@media (max-width: 360px) {
+    /* Les boutons de paiement passent l'un sous l'autre pour être lisibles */
+    .payment-options { grid-template-columns: 1fr; }
+    
+    /* La carte produit prend presque tout l'écran pour bien voir la chaussure */
+    .card { min-width: 92vw; }
+    
+    .modal-content { width: 96%; margin: 2% auto; }
+}
+
 /* CARTE PRODUIT STYLE IMAGE */
 .card {
-    background: #ffffff;
-    border-radius: 15px;
-    padding: 15px;
-    border: 2px solid #f0f0f0;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
     position: relative;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Couleurs des bordures par carte */
-.card-red { border-color: #ffb3ba !important;  }
+.card-red { border-color: #ffb3ba;  }
 .card-red .badge { 
     color: #ff4d4d; 
-    background: rgba(255, 77, 77, 0.1); /* Fond très léger pour faire ressortir le texte */
+    background: rgba(255, 77, 77, 0.1);
 }
-.card-orange { border-color: #ffdfba !important; }
+.card-orange { border-color: #ffdfba; }
 .card-orange .badge { 
     color: #ffa502; 
     background: rgba(255, 165, 2, 0.1);
 }
-.card-green { border-color: #baffc9 !important; }
+.card-green { border-color: #baffc9; }
 .card-green .badge { 
     color: #2ed573; 
     background: rgba(46, 213, 115, 0.1);
 }
-.card-purple { border-color: #eecbff !important; }
+.card-purple { border-color: #eecbff; }
 .card-purple .badge { 
     color: #a29bfe; 
     background: rgba(162, 155, 254, 0.1);
 }
 
-.card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+.card:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2); 
+    border-color: var(--primary-blue);
+}
 
 .badge {
     display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
     text-transform: uppercase;
     position: absolute;
     top: 15px;
     left: 15px;
+    letter-spacing: 0.5px;
 }
 
-.img-container img { width: 100%; }
+.img-container {
+    background: radial-gradient(circle, #2a3a54, var(--card-bg) 70%);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.img-container img { width: 100%; transition: transform 0.4s ease; }
+.card:hover .img-container img { transform: scale(1.05) rotate(-5deg); }
 
-.info h3 { font-size: 14px; color: #333; margin: 10px 0; }
-.info h3 span { display: block; color: #999; font-size: 12px; }
+.info { margin-top: auto; padding-top: 20px; } /* Pousse le contenu vers le bas */
+.info h3 { font-size: 1.1rem; color: var(--text-white); margin: 0; font-weight: 700; }
+.info h3 span { display: block; color: var(--text-gray); font-size: 0.9rem; font-weight: 400; }
 
-.price { font-weight: bold; font-size: 16px; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+.price { font-weight: 800; font-size: 1.5rem; color: var(--primary-blue); }
 
 /* BOUTON PANIER ROND BLEU CIEL */
 .add-btn {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    background: white;
-    border: 1.5px solid var(--mizan-blue);
-    color: var(--mizan-blue);
-    width: 35px;
-    height: 35px;
+    background: var(--primary-blue);
+    border: none;
+    color: var(--dark-bg);
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
 }
 
-.add-btn:hover { background: var(--mizan-blue); color: white; }
-
-/* FOOTER NOIR */
-.login-footer-main {
-    background-color: #000000;
-    color: #ffffff;
-    padding: 30px;
-    text-align: center;
-}
-
-.footer-links a { color: #666; text-decoration: none; margin: 0 10px; font-size: 12px; }
-.footer-links a:hover { color: white; }
+.add-btn:hover { transform: scale(1.1) rotate(15deg); box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
 
 /* --- MODAL PANIER PROFESSIONNEL --- */
 .modal {

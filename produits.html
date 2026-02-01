@@ -26,11 +26,14 @@
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cart-count">0</span>
                 </div>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
             </div>
         </nav>
     </header>
 
-    <section id="mizan-shop" style="padding-top: 120px;">
+    <section id="mizan-shop">
         <div class="products-grid">
 
             <article class="card card-red">
@@ -310,6 +313,20 @@
             document.querySelector('.cart-icon').addEventListener('click', function() {
                 ouvrirModal();
             });
+
+            // GESTION DU MENU BURGER
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            if(hamburger) {
+                hamburger.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    // Change l'icône
+                    const icon = hamburger.querySelector('i');
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                });
+            }
         });
     </script>
 

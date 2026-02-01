@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DAR! Mizan | Sport Professionnel</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="body-login">
     <header class="header-pro">
@@ -19,6 +20,9 @@
                     <li><a href="produits.html">Produits</a></li>
                 </ul>
                 <a href="connexion.html" class="btn-login">Login</a>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
             </div>
         </nav>
     </header>
@@ -105,6 +109,20 @@
                 alert("Veuillez remplir tous les champs obligatoires.");
             }
         });
+
+        // GESTION DU MENU BURGER
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        if(hamburger) {
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                // Change l'icône
+                const icon = hamburger.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+        }
     </script>
 </body>
 </html>    
