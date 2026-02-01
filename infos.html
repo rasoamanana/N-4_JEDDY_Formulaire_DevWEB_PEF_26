@@ -6,31 +6,33 @@
     <title>DAR! Mizan | Sport Professionnel</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="body-login">
     <header class="header-pro">
         <nav class="navbar">
             <div class="logo">
                 <img src="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg" alt="Logo DAR! Mizan" class="logo-img">
                 DAR! <span>Mizan</span>
             </div>
-            <ul class="nav-links">
-                <li><a href="index.html" class="active">Accueil</a></li>
-                <li><a href="produits.html">Produits</a></li>
-                <li><a href="infos.html">S'inscrire</a></li>
-            </ul>
-            <div class="nav-actions">
+            <div class="nav-right-group">
+                <ul class="nav-links">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="produits.html">Produits</a></li>
+                </ul>
                 <a href="connexion.html" class="btn-login">Login</a>
             </div>
         </nav>
     </header>
-    <main class="form-container">
-        <form class="infos-form">
+    <main class="login-container">
+        <div class="login-card" style="max-width: 600px;">
+            <div class="login-content">
             <h2>Informations <span>Étudiant</span></h2>
 
+            <form class="infos-form" style="background: none; box-shadow: none; padding: 0; width: 100%;">
             <fieldset>
                 <legend>Information Personnelle</legend>
                 <input type="text" id="reg-nom" placeholder="Nom (Sera votre identifiant)" required>
-                <input type="password" id="reg-mdp" placeholder="Créer un mot de passe" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                <input type="password" id="reg-mdp" placeholder="Créer un mot de passe" required>
+                <input type="password" id="reg-mdp-confirm" placeholder="Confirmer le mot de passe" required>
                 <input type="text" placeholder="Prénom">
             
                 <div class="gender-box">
@@ -58,8 +60,10 @@
                 </div>
             </fieldset>
 
-            <button type="submit" class="btn-submit">Finaliser mon inscription</button>
-        </form>
+            <button type="submit" class="btn-glow">Finaliser mon inscription</button>
+            </form>
+            </div>
+        </div>
     </main>
 
     <footer class="login-footer-main">
@@ -78,8 +82,14 @@
 
             const nom = document.getElementById('reg-nom').value;
             const mdp = document.getElementById('reg-mdp').value;
+            const mdpConfirm = document.getElementById('reg-mdp-confirm').value;
 
-            if(nom && mdp) {
+            if(nom && mdp && mdpConfirm) {
+                if(mdp !== mdpConfirm) {
+                    alert("Les mots de passe ne correspondent pas !");
+                    return;
+                }
+
                 // On récupère les utilisateurs existants ou on crée une liste vide
                 let users = JSON.parse(localStorage.getItem('users')) || [];
                 
@@ -92,7 +102,7 @@
                 alert("Inscription réussie ! Vous allez être redirigé vers la page de connexion.");
                 window.location.href = "connexion.html";
             } else {
-                alert("Veuillez remplir le nom et le mot de passe.");
+                alert("Veuillez remplir tous les champs obligatoires.");
             }
         });
     </script>

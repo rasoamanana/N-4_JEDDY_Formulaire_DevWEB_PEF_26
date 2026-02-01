@@ -1,0 +1,679 @@
+/* --- CONFIGURATION GÉNÉRALE --- */
+:root {
+    --primary: #38bdf8;        /* Bleu ciel pro */
+    --primary-dark: #007bff;   /* Bleu standard */
+    --dark-bg: #0f172a;        /* Fond bleu nuit */
+    --card-bg: #1e293b;        /* Fond des cartes */
+    --input-bg: #0f172a;
+    --text-white: #ffffff;
+    --text-gray: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-white);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* --- HEADER PROFESSIONNEL --- */
+.header-pro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(15, 23, 42, 0.8); /* Fond sombre semi-transparent */
+    backdrop-filter: blur(20px);        /* Effet de flou "verre dépoli" */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 20px;
+    transition: all 0.3s ease;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.logo span { 
+    color: var(--primary-blue);
+ }
+
+.logo-img {
+    height: 35px;
+    width: auto;
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4)); /* Lueur sur le logo */
+    transition: transform 0.3s ease;
+}
+
+.logo:hover .logo-img { transform: scale(1.1) rotate(-5deg); }
+
+/* Groupe à droite (pour index.html) */
+.nav-right-group {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+/* Liens de navigation */
+.nav-links {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    position: relative;
+    color: var(--text-gray);
+    text-decoration: none;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    padding: 5px 0;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: white;
+}
+
+/* Animation de soulignement */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-blue);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 8px var(--primary-blue);
+}
+
+.nav-links a:hover::after, .nav-links a.active::after {
+    width: 100%;
+}
+
+/* Bouton Login/Logout */
+.btn-login {
+    padding: 10px 28px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--primary-blue);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 50px; /* Forme pilule très moderne */
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-login:hover {
+    background: var(--primary-blue);
+    color: var(--dark-bg);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); /* Lueur intense */
+    transform: translateY(-2px);
+    border-color: var(--primary-blue);
+}
+
+/* --- HERO SECTION --- */
+.hero-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    background: radial-gradient(circle at 20% 50%, #001a4d 0%, #050505 100%);
+    padding: 0 8%;
+}
+
+.hero-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.hero-text { width: 50%; }
+
+.badge-nouveaute {
+    background: var(--primary);
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hero-text h1 {
+    font-size: 4.5rem;
+    line-height: 1;
+    font-weight: 900;
+    margin-bottom: 25px;
+}
+
+.text-gradient {
+    background: linear-gradient(to right, #fff, #666);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-text p {
+    color: var(--text-gray);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    max-width: 480px;
+}
+
+/* BOUTONS CÔTE À CÔTE */
+.hero-btns { display: flex; gap: 20px; }
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    padding: 16px 32px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,0.05);
+    color: white;
+    padding: 16px 32px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* --- VISUEL AVEC FLOU ET AJUSTEMENT --- */
+.hero-visual {
+    width: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.blur-circle {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: var(--primary);
+    filter: blur(120px); /* C'est ça qui fait l'effet de flou lumineux */
+    opacity: 0.4;
+    z-index: 1;
+}
+
+.diamond-shape {
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    background: rgba(255, 255, 255, 0.03);
+    transform: rotate(45deg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 2;
+}
+
+.shoe-img {
+    width: 110%;
+    z-index: 5;
+    transform: rotate(-15deg) translateY(-20px);
+    filter: drop-shadow(0 40px 60px rgba(0,0,0,0.7));
+    transition: 0.5s ease-in-out;
+}
+
+.shoe-img:hover {
+    transform: rotate(-10deg) scale(1.05);
+}
+
+/* --- CONFIGURATION GLOBALE --- */
+:root {
+    --primary-blue: #38bdf8;
+    --dark-bg: #0f172a;
+    --card-bg: #1e293b;
+    --input-bg: #0f172a;
+    --text-white: #ffffff;
+    --text-gray: #94a3b8;
+    --border-color: #334155;
+}
+
+.body-login {
+    display: flex;
+    flex-direction: column; /* Organise Header, Main et Footer l'un sous l'autre */
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--dark-bg);
+}
+
+/* --- LA CARTE DE CONNEXION --- */
+
+.login-card {
+    position: relative; /* Nécessaire pour positionner les éléments animés */
+    width: 100%;
+    max-width: 420px;
+    padding: 4px; /* On réduit le padding ici pour créer l'épaisseur de la bordure */
+    background: transparent; /* Le fond sera géré par le pseudo-élément ::after */
+    border-radius: 20px;
+    overflow: hidden; /* Coupe ce qui dépasse pour garder la forme arrondie */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8); /* Ombre plus sombre pour le contraste */
+    border: none; /* On enlève l'ancienne bordure statique */
+    /* Supprime le margin-top fixe ici pour laisser le Flexbox gérer */
+}
+
+/* L'animation qui tourne (Le rayon lumineux) */
+@keyframes rotate-border {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(transparent, transparent, transparent, var(--primary-blue), white, var(--primary-blue), transparent, transparent);
+    animation: rotate-border 4s linear infinite;
+    z-index: 0;
+}
+
+/* Le fond noir par-dessus pour cacher le centre du rayon */
+.login-card::after {
+    content: '';
+    position: absolute;
+    inset: 3px; /* Épaisseur de la bordure animée (3px) */
+    background: var(--card-bg);
+    border-radius: 18px; /* Un peu moins que le parent pour suivre la courbe */
+    z-index: 0;
+}
+
+/* On s'assure que le contenu est au-dessus de l'animation */
+.login-content {
+    position: relative;
+    z-index: 1;
+    padding: 36px; /* On remet le padding interne ici */
+    height: 100%;
+}
+
+.login-container {
+    flex: 1; /* Prend tout l'espace disponible entre le header et le footer */
+    display: flex;
+    justify-content: center; /* Centre la carte horizontalement */
+    align-items: center;     /* Centre la carte verticalement */
+    padding: 20px;
+    margin-top: 110px;        /* Espace pour éviter que le header cache le haut */
+}
+
+.login-content h2 {
+    color: var(--text-white);
+    font-size: 2rem;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.login-content h2 span {
+    color: var(--primary-blue);
+}
+
+.subtitle {
+    color: var(--text-gray);
+    text-align: center;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+/* --- FORMULAIRE --- */
+.input-box {
+    margin-bottom: 20px;
+}
+
+.input-box label {
+    display: block;
+    color: var(--text-gray);
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 14px;
+    background: var(--input-bg);
+    border: 1px solid #334155;
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-box input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+}
+
+/* --- BOUTON --- */
+.btn-glow {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary-blue);
+    border: none;
+    border-radius: 10px;
+    color: var(--dark-bg);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-glow:hover {
+    background: #7dd3fc;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+}
+
+/* --- SÉPARATEUR --- */
+.separateur {
+    margin: 30px 0;
+    font-size: 0.75rem;
+    color: #475569;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.separateur::before, .separateur::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #334155;
+}
+
+.separateur::before { margin-right: 15px; }
+.separateur::after { margin-left: 15px; }
+
+/* --- RÉSEAUX SOCIAUX --- */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.social-icons a {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--input-bg);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.social-icons a:hover {
+    background: #1e293b;
+    border-color: var(--primary-blue);
+    transform: scale(1.05);
+}
+
+.social-icons img {
+    width: 24px;
+    height: 24px;
+}
+
+/* --- FOOTER --- */
+.login-footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.login-footer p {
+    color: var(--text-gray);
+    margin: 8px 0;
+}
+
+.login-footer a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+.login-footer-main {
+    padding: 30px;
+    text-align: center;
+    background: rgba(0,0,0,0.2); /* Optionnel : pour bien voir le footer */
+}
+
+/* --- FORM CONTAINER --- */
+.form-container {
+    padding-top: 120px; /* Espace pour le header fixe */
+    padding-bottom: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.infos-form {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 650px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.infos-form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+}
+
+.infos-form h2 span { color: var(--primary-blue); }
+
+/* --- FIELDSET & LEGEND --- */
+fieldset {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+legend {
+    color: var(--primary-blue);
+    font-weight: bold;
+    padding: 0 10px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+/* --- INPUTS & SELECT --- */
+input[type="text"], 
+input[type="password"], 
+select, 
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+textarea { height: 80px; resize: none; }
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
+
+/* --- GENDER & SKILLS BOXES --- */
+.gender-box, .skills-box {
+    margin: 10px 0 20px 0;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+}
+
+.gender-box span, .skills-box p {
+    margin-bottom: 10px;
+    display: block;
+    color: var(--primary-blue);
+}
+
+.gender-box label, .skills-box label {
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+/* --- BOUTON SUBMIT --- */
+.btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: var(--primary-blue);
+    color: var(--dark-bg);
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-submit:hover {
+    background: #7dd3fc;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
+}
+.text-gradient {
+    background: linear-gradient(to right, #ffffff, var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.3));
+}
+.login-footer-main {
+    margin-top: auto; /* Pousse le footer vers le bas si tu es en flexbox */
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    width: 100%;
+}
+
+.footer-links {
+    margin-top: 10px;
+}
+
+.footer-links a {
+    margin: 0 10px;
+    color: #888;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+/* --- STYLE BOGOSSE POUR CONTACT --- */
+
+/* Style spécifique pour le champ Message (textarea) */
+textarea {
+    width: 100%;
+    padding: 14px;
+    background: var(--input-bg);
+    border: 1px solid #334155;
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
+/* Zone d'infos de contact sous le bouton */
+.contact-info-footer {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.contact-item i {
+    color: var(--primary-blue);
+    font-size: 1.1rem;
+}
+
+.contact-item:hover {
+    color: white;
+    transform: translateX(5px); /* Petit effet de glissement au survol */
+}
+
+/* Animation d'entrée pour la carte */
+.login-card {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(30px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}

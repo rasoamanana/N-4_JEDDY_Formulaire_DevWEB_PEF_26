@@ -5,27 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DAR! Mizan - Nike Shop</title>
     <link rel="stylesheet" href="boutique.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <header>
-        <div class="logo">DAR! <span>Mizan</span></div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="produits.html">Produits</a></li>
-                <li><a href="infos.html">S'inscrire</a></li>
-            </ul>
-            <a href="connexion.html" class="btn-login">Login</a>
+    <header class="header-pro">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg" alt="Logo DAR! Mizan" class="logo-img">
+                DAR! <span>Mizan</span>
+            </div>
+            <div class="nav-right-group">
+                <ul class="nav-links">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="produits.html" class="active">Produits</a></li>
+                </ul>
+                <a href="connexion.html" class="btn-login">Login</a>
+                <div class="cart-icon" style="margin-left: 20px;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count">0</span>
+                </div>
+            </div>
         </nav>
-        <div class="cart-icon">
-            <i class="fas fa-shopping-cart"></i>
-            <span id="cart-count">0</span>
-        </div>
     </header>
 
-    <section id="mizan-shop">
+    <section id="mizan-shop" style="padding-top: 120px;">
         <div class="products-grid">
 
             <article class="card card-red">
@@ -173,23 +178,30 @@
 
     <div id="payment-modal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="fermerModal()">&times;</span>
-        <h2><i class="fas fa-shopping-cart"></i> Votre Panier</h2>
+        <div class="modal-header">
+            <h2><i class="fas fa-shopping-bag"></i> Mon Panier</h2>
+            <span class="close" onclick="fermerModal()">&times;</span>
+        </div>
         
-        <div id="cart-items-list">
+        <div class="modal-body">
+            <div id="cart-items-list">
+                <!-- Les articles s'afficheront ici -->
             </div>
-
-        <div class="summary">
-            <p class="total-line">Total : <span id="modal-total">0.00</span> €</p>
-            <button class="btn-clear" onclick="viderPanier()">Tout vider</button>
         </div>
 
-        <h3>Payer par :</h3>
-        <div class="payment-options">
-            <button class="pay-btn orange" onclick="payer('Orange Money')">Orange Money</button>
-            <button class="pay-btn mvola" onclick="payer('Mvola')">Mvola</button>
-            <button class="pay-btn paypal" onclick="payer('PayPal')">PayPal</button>
-            <button class="pay-btn card-bank" onclick="payer('Carte')">Carte</button>
+        <div class="modal-footer">
+            <div class="summary">
+                <p class="total-line">Total : <span id="modal-total">0.00</span> €</p>
+                <button class="btn-clear" onclick="viderPanier()">Vider</button>
+            </div>
+
+            <p class="payment-title">Paiement sécurisé via</p>
+            <div class="payment-options">
+                <button class="pay-btn orange" onclick="payer('Orange Money')"><i class="fas fa-money-bill-wave"></i> Orange</button>
+                <button class="pay-btn mvola" onclick="payer('Mvola')"><i class="fas fa-mobile-alt"></i> Mvola</button>
+                <button class="pay-btn paypal" onclick="payer('PayPal')"><i class="fab fa-paypal"></i> PayPal</button>
+                <button class="pay-btn card-bank" onclick="payer('Carte')"><i class="fas fa-credit-card"></i> Carte</button>
+            </div>
         </div>
     </div>
 </div>
@@ -211,7 +223,15 @@
             const produit = { nom: nom, prix: prix };
             panier.push(produit);
             majAffichage();
-            ouvrirModal();
+            
+            // Animation visuelle sur l'icône du panier (Feedback utilisateur)
+            const cartIcon = document.querySelector('.cart-icon i');
+            cartIcon.classList.add('cart-anim');
+            
+            // On retire la classe après l'animation pour pouvoir la rejouer
+            setTimeout(() => {
+                cartIcon.classList.remove('cart-anim');
+            }, 500);
         }
 
         function supprimerProduit(index) {
@@ -240,9 +260,14 @@
             panier.forEach((produit, index) => {
                 totalCalcul += produit.prix;
                 htmlGenere += `
-                    <div class="cart-item" style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee;">
-                        <span>${produit.nom} - ${produit.prix.toFixed(2)}€</span>
-                        <button onclick="supprimerProduit(${index})" style="background:red; color:white; border:none; border-radius:50%; cursor:pointer;">&times;</button>
+                    <div class="cart-item">
+                        <div class="item-info">
+                            <span class="item-name">${produit.nom}</span>
+                            <span class="item-price">${produit.prix.toFixed(2)} €</span>
+                        </div>
+                        <button class="remove-btn" onclick="supprimerProduit(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>`;
             });
 
@@ -280,6 +305,11 @@
                     }
                 });
             }
+
+            // Ouvrir le panier au clic sur l'icône
+            document.querySelector('.cart-icon').addEventListener('click', function() {
+                ouvrirModal();
+            });
         });
     </script>
 
