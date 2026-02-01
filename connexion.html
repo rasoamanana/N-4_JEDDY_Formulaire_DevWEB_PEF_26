@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>DAR! Mizan | Connexion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header-pro">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg" alt="Logo DAR! Mizan" class="logo-img">
+                DAR! <span>Mizan</span>
+            </div>
+
+            <div class="nav-right-group">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">Accueil</a></li>
+                    <li><a href="produits.html">Produits</a></li>
+                    <li><a href="infos.html">S'inscrire</a></li>
+                </ul>
+                <a href="connexion.html" class="btn-login">Se connecter</a>
+            </div>
+        </nav>
+    </header>
+
+
+    <main class="login-container"> <div class="login-card">
+            <div class="login-content">
+                <h2>Se <span>Connecter</span></h2>
+                <p class="subtitle">Accédez à votre compte</p>
+
+                <form>
+                    <div class="input-box">
+                        <label>Nom d'utilisateur</label>
+                        <input type="text" id="login-user" placeholder="Entrez votre nom" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Mot de passe</label>
+                        <input type="password" id="login-pass" placeholder="••••••••" required>
+                    </div>
+                
+                    <button type="submit" class="btn-glow">Connexion</button>
+                </form>
+
+                <div class="separateur">OU CONTINUER AVEC</div>
+
+                <div class="social-icons">
+                    <a href="#"><img src="icon/google.png" alt="Google"></a>
+                    <a href="#"><img src="icon/pomme.lnk" alt="Apple"></a>
+                    <a href="#"><img src="icon/facebook (1).png" alt="Facebook"></a>
+                </div>
+
+                <div class="login-footer">
+                    <p>Mot de passe oublié ? <a href="#">Cliquer ici</a></p>
+                    <p>Pas encore de compte ? <a href="infos.html">S'inscrire ici</a></p>
+                </div>
+            </div>
+        </div>
+
+    </main> 
+
+    <footer class="login-footer-main">
+        <p>&copy; 2026 DAR! Mizan. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#">Conditions d'utilisation</a>
+            <a href="#">Politique de confidentialité</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const userVal = document.getElementById('login-user').value;
+            const passVal = document.getElementById('login-pass').value;
+
+            // Récupérer la liste des utilisateurs inscrits
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Vérifier si un utilisateur correspond
+            let userFound = users.find(u => u.username === userVal && u.password === passVal);
+
+            if (userFound) {
+                // Connecter l'utilisateur (sauvegarder la session)
+                localStorage.setItem('currentUser', userVal);
+                alert("Connexion réussie ! Bienvenue " + userVal);
+                window.location.href = "index.html"; // Redirection vers l'accueil
+            } else {
+                alert("Nom d'utilisateur ou mot de passe incorrect.");
+            }
+        });
+    </script>
+</body>
+</html>

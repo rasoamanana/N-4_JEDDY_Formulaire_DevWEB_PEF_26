@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAR! Mizan | Sport Professionnel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header-pro">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg" alt="Logo DAR! Mizan" class="logo-img">
+                DAR! <span>Mizan</span>
+            </div>
+
+            <div class="nav-right-group">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">Accueil</a></li>
+                    <li><a href="produits.html">Produits</a></li>
+                    <li><a href="infos.html">S'inscrire</a></li>
+                </ul>
+                <a href="connexion.html" class="btn-login">Se connecter</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="hero-section">
+        <div class="hero-container">
+            
+            <div class="hero-text">
+                <div class="badge-nouveaute">NOUVEAUTÉ</div>
+                <h1>NIKE ZOOM<br><span class="text-gradient">SPORT ÉDITION</span></h1>
+                <p>La nouvelle référence de vitesse et de confort. Conçue pour dépasser vos limites sur tous les terrains.</p>
+                
+                <div class="hero-btns">
+                    <a href="produits.html" class="btn-primary">Acheter Maintenant</a>
+                    <a href="infos.html" class="btn-secondary">S'inscrire</a>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="blur-circle"></div> <div class="diamond-shape"></div> <img src="iimage/images.jpeg" alt="Nike Zoom" class="shoe-img">
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="login-footer-main">
+        <p>&copy; 2026 DAR! Mizan. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#">Conditions d'utilisation</a>
+            <a href="#">Politique de confidentialité</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        // Vérifier si l'utilisateur est connecté pour changer le bouton Login en Logout
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const loginBtn = document.querySelector('.btn-login');
+
+            if (currentUser && loginBtn) {
+                loginBtn.textContent = "Se déconnecter";
+                loginBtn.href = "#";
+                loginBtn.style.backgroundColor = "#dc3545"; 
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if(confirm("Voulez-vous vous déconnecter ?")) {
+                        localStorage.removeItem('currentUser');
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

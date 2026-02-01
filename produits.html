@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAR! Mizan - Nike Shop</title>
+    <link rel="stylesheet" href="boutique.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">DAR! <span>Mizan</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="produits.html">Produits</a></li>
+                <li><a href="infos.html">S'inscrire</a></li>
+            </ul>
+            <a href="connexion.html" class="btn-login">Login</a>
+        </nav>
+        <div class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-count">0</span>
+        </div>
+    </header>
+
+    <section id="mizan-shop">
+        <div class="products-grid">
+
+            <article class="card card-red">
+                <span class="badge">NOUVEAU</span>
+                <div class="img-container">
+                    <img src="iimage/nikezoompegaus42.jpeg" alt="Nike Pegasus 42">
+                </div>
+                <div class="info">
+                    <h3>Nike Air Zoom <span>Pegaus 42</span></h3>
+                    <div class="card-footer">
+                        <p class="price">129.99 €</p>
+                        <button class="add-btn" onclick="ajouterAuPanier('Nike Pegasus 42', 129.99)">
+                            <i class="fas fa-shopping-basket"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card card-orange">
+                <span class="badge">PROMO</span>
+                <div class="img-container">
+                    <img src="iimage/nike.zoomfly6.webp" alt="Nike Zoom Fly 6">
+                </div>
+                <div class="info">
+                    <h3>Nike Air Zoom <span>fly 6</span></h3>
+                    <div class="card-footer">
+                        <p class="price">110.00 €</p>
+                        <button class="add-btn" onclick="ajouterAuPanier('Nike Zoom Fly 6', 110.00)">
+                            <i class="fas fa-shopping-basket"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card card-green">
+                <span class="badge">COLLECTION</span>
+                <div class="img-container">
+                    <img src="iimage/vomero5.jpeg" alt="Nike vomero 5">
+                </div>
+                <div class="info">
+                    <h3>Nike Air Zoom <span>Vomero 5</span></h3>
+                    <div class="card-footer">
+                        <p class="price">129.00 €</p>
+                        <button class="add-btn" onclick="ajouterAuPanier('Nike Vomero 5', 129.00)">
+                            <i class="fas fa-shopping-basket"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card card-purple">
+                <span class="badge">LIMITED</span>
+                <div class="img-container">
+                    <img src="iimage/alphaly3.jpeg" alt="Nike alphaly3">
+                </div>
+                <div class="info">
+                    <h3>Nike Air Zoom <span>Alphafly 3</span></h3>
+                    <div class="card-footer">
+                        <p class="price">129.80 €</p>
+                        <button class="add-btn" onclick="ajouterAuPanier('Nike Alphafly 3', 129.80)">
+                            <i class="fas fa-shopping-basket"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card card-red">
+                <span class="badge">NOUVEAU</span>
+                <div class="img-container">
+                    <img src="iimage/zoomstructure26.jpeg" alt="Nike 26">
+                </div>
+                <div class="info">
+                    <h3>Nike Air Zoom <span>Structure 26</span></h3>
+                    <div class="card-footer">
+                        <p class="price">100.00 €</p>
+                        <button class="add-btn" onclick="ajouterAuPanier('Nike Structure 26', 100.00)">
+                            <i class="fas fa-shopping-basket"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+
+            <article class="card card-orange">
+                <span class="badge">PROMO</span>
+                <div class="img-container">
+                    <img src="iimage/nikezoomvomero18.jpeg" alt="Nike vomero 18">
+                </div>
+                <div class="info">
+                    <h3>Nike Air Zoom <span>Vomero 18</span></h3>
+                    <div class="card-footer">
+                        <p class="price">120.89 €</p>
+                        <button class="add-btn" onclick="ajouterAuPanier('Nike Vomero 18', 120.89)">
+                            <i class="fas fa-shopping-basket"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card card-green">
+                <span class="badge">COLLECTION</span>
+                <div class="img-container">
+                    <img src="iimage/spiridoncage 2.jpeg" alt="Nike spiridoncage 2">
+                </div>
+                <div class="info">
+                    <h3>Nike Air Zoom <span>spiridoncage 2</span></h3>
+                    <div class="card-footer">
+                        <p class="price">90.00 €</p>
+                        <button class="add-btn" onclick="ajouterAuPanier('Nike Spiridon', 90.00)">
+                            <i class="fas fa-shopping-basket"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card card-purple">
+                <span class="badge">LIMITED</span>
+                <div class="img-container">
+                    <img src="iimage/tempo%.jpeg" alt="Nike Tempo%">
+                </div>
+                <div class="info">
+                    <h3>Nike Air Zoom <span>tempo%</span></h3>
+                    <div class="card-footer">
+                        <p class="price">100.50 €</p>
+                        <button class="add-btn" onclick="ajouterAuPanier('Nike Tempo', 100.50)">
+                            <i class="fas fa-shopping-basket"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            </div>
+    </section>
+
+    
+
+    <footer class="login-footer-main">
+        <p>&copy; 2026 DAR! Mizan. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#">Conditions d'utilisation</a>
+            <a href="#">Politique de confidentialité</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </footer>
+
+    <div id="payment-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="fermerModal()">&times;</span>
+        <h2><i class="fas fa-shopping-cart"></i> Votre Panier</h2>
+        
+        <div id="cart-items-list">
+            </div>
+
+        <div class="summary">
+            <p class="total-line">Total : <span id="modal-total">0.00</span> €</p>
+            <button class="btn-clear" onclick="viderPanier()">Tout vider</button>
+        </div>
+
+        <h3>Payer par :</h3>
+        <div class="payment-options">
+            <button class="pay-btn orange" onclick="payer('Orange Money')">Orange Money</button>
+            <button class="pay-btn mvola" onclick="payer('Mvola')">Mvola</button>
+            <button class="pay-btn paypal" onclick="payer('PayPal')">PayPal</button>
+            <button class="pay-btn card-bank" onclick="payer('Carte')">Carte</button>
+        </div>
+    </div>
+</div>
+
+    </body>
+
+    <script>
+       let panier = []; 
+
+        function ajouterAuPanier(nom, prix) {
+            // VÉRIFICATION DE LA CONNEXION
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                alert("Vous devez être connecté pour ajouter des produits au panier !");
+                window.location.href = "connexion.html";
+                return;
+            }
+
+            const produit = { nom: nom, prix: prix };
+            panier.push(produit);
+            majAffichage();
+            ouvrirModal();
+        }
+
+        function supprimerProduit(index) {
+            panier.splice(index, 1);
+            majAffichage();
+        }
+
+        function viderPanier() {
+            if(panier.length > 0) {
+                if(confirm("Vider tout le panier ?")) {
+                    panier = [];
+                    majAffichage();
+                    fermerModal();
+                }
+            }
+        }
+
+        function majAffichage() {
+            const listConteneur = document.getElementById('cart-items-list');
+            const totalAffichage = document.getElementById('modal-total');
+            const countAffichage = document.getElementById('cart-count');
+            
+            let htmlGenere = "";
+            let totalCalcul = 0;
+
+            panier.forEach((produit, index) => {
+                totalCalcul += produit.prix;
+                htmlGenere += `
+                    <div class="cart-item" style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee;">
+                        <span>${produit.nom} - ${produit.prix.toFixed(2)}€</span>
+                        <button onclick="supprimerProduit(${index})" style="background:red; color:white; border:none; border-radius:50%; cursor:pointer;">&times;</button>
+                    </div>`;
+            });
+
+            if (panier.length === 0) {
+                htmlGenere = "<p>Votre panier est vide</p>";
+            }
+
+            listConteneur.innerHTML = htmlGenere;
+            totalAffichage.innerText = totalCalcul.toFixed(2);
+            countAffichage.innerText = panier.length;
+        }
+
+        function ouvrirModal() { document.getElementById('payment-modal').style.display = "block"; }
+        function fermerModal() { document.getElementById('payment-modal').style.display = "none"; }
+
+        function payer(methode) {
+            if (panier.length === 0) return alert("Panier vide !");
+            alert("Paiement " + methode + " : " + document.getElementById('modal-total').innerText + "€");
+        }
+
+        // GESTION DU HEADER (LOGIN / LOGOUT)
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const loginBtn = document.querySelector('.btn-login');
+
+            if (currentUser && loginBtn) {
+                loginBtn.textContent = "Se déconnecter (" + currentUser + ")";
+                loginBtn.href = "#";
+                loginBtn.style.backgroundColor = "#dc3545"; // Rouge pour déconnexion
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if(confirm("Voulez-vous vous déconnecter ?")) {
+                        localStorage.removeItem('currentUser');
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>DAR! Mizan | Contact</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="body-login"> <header class="header-pro">
+        <nav class="navbar">
+            <div class="logo">DAR! <span>Mizan</span></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="produits.html">Produits</a></li>
+                <li><a href="infos.html">S'inscrire</a></li>
+            </ul>
+            <a href="connexion.html" class="btn-login">Login</a>
+        </nav>
+    </header>
+
+    <main class="login-container">
+        <div class="login-card">
+            <div class="login-content">
+                <h2>Contactez-<span>Nous</span></h2>
+                <p class="subtitle">Une question ? Nous vous répondons sous 24h.</p>
+
+                <form action="#">
+                    <div class="input-box">
+                        <label>Email</label>
+                        <input type="email" placeholder="votre@email.com" required 
+                               style="width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid #334155; border-radius: 10px; color: white;">
+                    </div>
+                    <div class="input-box">
+                        <label>Message</label>
+                        <textarea placeholder="Comment pouvons-nous vous aider ?" required 
+                                  style="width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid #334155; border-radius: 10px; color: white; height: 120px; resize: none;"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-glow">Envoyer le message</button>
+                </form>
+
+                <div class="login-footer" style="margin-top: 20px;">
+                    <p><i class="fas fa-phone" style="color: var(--primary-blue);"></i> +261 34 00 000 00</p>
+                    <p><i class="fas fa-envelope" style="color: var(--primary-blue);"></i> support@mizan.mg</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="login-footer-main">
+        <p>&copy; 2026 DAR! Mizan. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Vérifier si l'utilisateur est connecté pour changer le bouton Login en Logout
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const loginBtn = document.querySelector('.btn-login');
+
+            if (currentUser && loginBtn) {
+                loginBtn.textContent = "Se déconnecter";
+                loginBtn.href = "#";
+                loginBtn.style.backgroundColor = "#dc3545"; 
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if(confirm("Voulez-vous vous déconnecter ?")) {
+                        localStorage.removeItem('currentUser');
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
