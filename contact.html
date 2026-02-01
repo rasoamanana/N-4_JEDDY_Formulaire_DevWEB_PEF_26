@@ -34,13 +34,11 @@
                 <form action="#">
                     <div class="input-box">
                         <label>Email</label>
-                        <input type="email" placeholder="votre@email.com" required 
-                               style="width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid #334155; border-radius: 10px; color: white;">
+                        <input type="email" placeholder="votre@email.com" required>
                     </div>
                     <div class="input-box">
                         <label>Message</label>
-                        <textarea placeholder="Comment pouvons-nous vous aider ?" required 
-                                  style="width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid #334155; border-radius: 10px; color: white; height: 120px; resize: none;"></textarea>
+                        <textarea placeholder="Comment pouvons-nous vous aider ?" required></textarea>
                     </div>
                     
                     <button type="submit" class="btn-glow">Envoyer le message</button>
@@ -56,6 +54,11 @@
 
     <footer class="login-footer-main">
         <p>&copy; 2026 DAR! Mizan. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="conditions.html">Conditions d'utilisation</a>
+            <a href="politique.html">Politique de confidentialité</a>
+            <a href="contact.html">Contact</a>
+        </div>
     </footer>
 
     <script>
@@ -74,6 +77,16 @@
                         localStorage.removeItem('currentUser');
                         window.location.reload();
                     }
+                });
+            }
+
+            // GESTION DU FORMULAIRE CONTACT (SIMULATION)
+            const contactForm = document.querySelector('form');
+            if(contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert("Merci ! Votre message a bien été envoyé à l'équipe DAR! Mizan.");
+                    this.reset(); // Vide les champs
                 });
             }
 

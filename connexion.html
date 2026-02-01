@@ -49,9 +49,9 @@
                 <div class="separateur">OU CONTINUER AVEC</div>
 
                 <div class="social-icons">
-                    <a href="#"><img src="icon/google.png" alt="Google"></a>
-                    <a href="#"><img src="icon/pomme.lnk" alt="Apple"></a>
-                    <a href="#"><img src="icon/facebook (1).png" alt="Facebook"></a>
+                    <a href="#" onclick="socialLogin('Google')"><img src="icon/google.png" alt="Google"></a>
+                    <a href="#" onclick="socialLogin('Apple')"><img src="icon/pomme.lnk" alt="Apple"></a>
+                    <a href="#" onclick="socialLogin('Facebook')"><img src="icon/facebook (1).png" alt="Facebook"></a>
                 </div>
 
                 <div class="login-footer">
@@ -66,8 +66,8 @@
     <footer class="login-footer-main">
         <p>&copy; 2026 DAR! Mizan. Tous droits réservés.</p>
         <div class="footer-links">
-            <a href="#">Conditions d'utilisation</a>
-            <a href="#">Politique de confidentialité</a>
+            <a href="conditions.html">Conditions d'utilisation</a>
+            <a href="politique.html">Politique de confidentialité</a>
             <a href="contact.html">Contact</a>
         </div>
     </footer>
@@ -94,6 +94,18 @@
                 alert("Nom d'utilisateur ou mot de passe incorrect.");
             }
         });
+
+        // SIMULATION CONNEXION RESEAUX SOCIAUX
+        function socialLogin(provider) {
+            // On simule un délai réseau pour faire "vrai"
+            alert("Redirection vers " + provider + " pour l'authentification...");
+            
+            setTimeout(() => {
+                localStorage.setItem('currentUser', "Utilisateur " + provider);
+                alert("Connexion réussie avec " + provider + " !");
+                window.location.href = "index.html";
+            }, 1000);
+        }
 
         // GESTION DU MENU BURGER
         const hamburger = document.querySelector('.hamburger');
