@@ -19,8 +19,8 @@
                 <ul class="nav-links">
                     <li><a href="index.html" class="active">Accueil</a></li>
                     <li><a href="produits.html">Produits</a></li>
+                    <li><a href="connexion.html" class="btn-login">Se connecter</a></li>
                 </ul>
-                <a href="connexion.html" class="btn-login">Se connecter</a>
                 <div class="hamburger">
                     <i class="fas fa-bars"></i>
                 </div>
@@ -74,29 +74,70 @@
     </footer>
 
     <script>
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        document.addEventListener("DOMContentLoaded", function() {
+            // VÉRIFICATION SI DÉJÀ CONNECTÉ
+            const currentUser = localStorage.getItem('currentUser');
+            
+            if (currentUser) {
+                // Si connecté, on remplace le contenu de la carte
+                const loginContent = document.querySelector('.login-content');
+                loginContent.innerHTML = `
+                    <h2>Compte <span>Actif</span></h2>
+                    <p class="subtitle">Bonjour ${currentUser}</p>
+                    <div style="text-align: center; margin: 40px 0;">
+                        <i class="fas fa-user-check" style="font-size: 4rem; color: #38bdf8; margin-bottom: 20px;"></i>
+                        <p style="color: #94a3b8; margin-bottom: 20px; line-height: 1.5;">
+                            Vous êtes déjà connecté sur ce navigateur.<br>
+                            Vous devez vous déconnecter pour changer de compte.
+                        </p>
+                        <button id="force-logout" class="btn-glow" style="background: #ef4444; color: white;">Se déconnecter maintenant</button>
+                        <a href="index.html" class="btn-glow" style="display:block; text-align:center; text-decoration:none; margin-top:15px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white;">Retour à l'accueil</a>
+                    </div>
+                `;
 
-            const userVal = document.getElementById('login-user').value;
-            const passVal = document.getElementById('login-pass').value;
+                // Action du bouton déconnexion
+                document.getElementById('force-logout').addEventListener('click', function() {
+                    localStorage.removeItem('currentUser');
+                    window.location.reload(); // Recharge la page pour réafficher le formulaire
+                });
 
-            // Récupérer la liste des utilisateurs inscrits
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-
-            // Vérifier si un utilisateur correspond
-            let userFound = users.find(u => u.username === userVal && u.password === passVal);
-
-            if (userFound) {
-                // Connecter l'utilisateur (sauvegarder la session)
-                localStorage.setItem('currentUser', userVal);
-                alert("Connexion réussie ! Bienvenue " + userVal);
-                window.location.href = "index.html"; // Redirection vers l'accueil
             } else {
-                alert("Nom d'utilisateur ou mot de passe incorrect.");
+                // Si PAS connecté, on active le formulaire normalement
+                const form = document.querySelector('form');
+                if(form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const userVal = document.getElementById('login-user').value;
+                        const passVal = document.getElementById('login-pass').value;
+                        let users = JSON.parse(localStorage.getItem('users')) || [];
+                        let userFound = users.find(u => u.username === userVal && u.password === passVal);
+
+                        if (userFound) {
+                            localStorage.setItem('currentUser', userVal);
+                            alert("Connexion réussie ! Bienvenue " + userVal);
+                            window.location.href = "index.html";
+                        } else {
+                            alert("Nom d'utilisateur ou mot de passe incorrect.");
+                        }
+                    });
+                }
+            }
+
+            // GESTION DU MENU BURGER (Reste actif dans tous les cas)
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            if(hamburger) {
+                hamburger.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    const icon = hamburger.querySelector('i');
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                });
             }
         });
 
-        // SIMULATION CONNEXION RESEAUX SOCIAUX
+        // FONCTION SOCIAL LOGIN (Globale)
         function socialLogin(provider) {
             // On simule un délai réseau pour faire "vrai"
             alert("Redirection vers " + provider + " pour l'authentification...");
@@ -106,20 +147,6 @@
                 alert("Connexion réussie avec " + provider + " !");
                 window.location.href = "index.html";
             }, 1000);
-        }
-
-        // GESTION DU MENU BURGER
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
-
-        if(hamburger) {
-            hamburger.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-                // Change l'icône
-                const icon = hamburger.querySelector('i');
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            });
         }
     </script>
 </body>
