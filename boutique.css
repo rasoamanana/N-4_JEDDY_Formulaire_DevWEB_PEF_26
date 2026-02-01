@@ -53,10 +53,121 @@ nav ul li a:hover { color: var(--mizan-blue); }
     }
 }
 
+/* Adaptation Mobile (< 600px) */
+@media (max-width: 600px) {
+    #mizan-shop {
+        padding: 100px 5% 80px; /* Moins de padding latéral, espace pour le bouton flottant en bas */
+    }
+}
+
 .products-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 25px;
+}
+
+/* --- CONTROLS BOUTIQUE (V4.0) --- */
+.shop-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: rgba(30, 41, 59, 0.6); /* Fond semi-transparent */
+    backdrop-filter: blur(12px); /* Effet verre dépoli */
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 250px; /* Réduit pour éviter les débordements sur tablette */
+}
+
+.search-box input {
+    width: 100%;
+    padding: 16px 55px 16px 25px; /* Espace à droite pour l'icône */
+    background: rgba(15, 23, 42, 0.8);
+    border: 2px solid #334155;
+    border-radius: 50px;
+    color: white;
+    font-size: 1.05rem;
+    margin-bottom: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--mizan-blue);
+    background: #0f172a;
+    box-shadow: 0 0 0 4px rgba(51, 188, 245, 0.15), inset 0 2px 4px rgba(0,0,0,0.2);
+    transform: translateY(-1px);
+}
+
+.search-box input::placeholder {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.search-box i {
+    position: absolute;
+    right: 22px; /* La loupe passe à droite */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 10; /* On s'assure qu'elle est bien au-dessus du champ */
+}
+
+.search-box:focus-within i {
+    color: var(--mizan-blue);
+    transform: translateY(-50%) scale(1.1);
+    text-shadow: 0 0 10px rgba(51, 188, 245, 0.5);
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-btn {
+    background: var(--dark-bg);
+    border: 1px solid #334155;
+    color: var(--text-gray);
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: var(--primary-blue);
+    color: var(--dark-bg);
+    border-color: var(--primary-blue);
+}
+
+@media (max-width: 768px) {
+    .shop-controls { flex-direction: column; align-items: stretch; }
+    .filter-buttons { justify-content: center; }
+}
+
+@media (max-width: 480px) {
+    .shop-controls { padding: 15px; gap: 15px; margin-bottom: 25px; }
+    .search-box input { font-size: 0.95rem; padding-top: 12px; padding-bottom: 12px; }
+    .filter-btn { flex: 1; justify-content: center; font-size: 0.8rem; padding: 8px 10px; }
+    .filter-buttons { gap: 8px; }
+    .search-box { min-width: 0; } /* CRUCIAL : Permet à la barre de rétrécir sous 250px sur mobile */
 }
 
 /* --- RESPONSIVE PRODUITS (SCROLL HORIZONTAL) --- */
@@ -68,6 +179,7 @@ nav ul li a:hover { color: var(--mizan-blue); }
         gap: 20px;
         padding-bottom: 30px; /* Espace pour le doigt */
         -webkit-overflow-scrolling: touch; /* Fluidité iOS */
+        margin: 0 -5%; padding-left: 5%; padding-right: 5%; /* Permet aux cartes de toucher les bords de l'écran */
     }
 
     .card {
@@ -85,6 +197,10 @@ nav ul li a:hover { color: var(--mizan-blue); }
     .card { min-width: 92vw; }
     
     .modal-content { width: 96%; margin: 2% auto; }
+
+    /* Optimisation des contrôles sur très petit écran (< 360px) */
+    .filter-buttons { flex-direction: column; width: 100%; }
+    .filter-btn { width: 100%; }
 }
 
 /* CARTE PRODUIT STYLE IMAGE */
@@ -220,13 +336,15 @@ nav ul li a:hover { color: var(--mizan-blue); }
 .close:hover { color: white; transform: rotate(90deg); }
 
 /* Corps (Liste) */
-.modal-body { padding: 25px; overflow-y: auto; flex: 1; color: black; }
+.modal-body { padding: 20px 25px; overflow-y: auto; flex: 1; color: black; }
 
 /* Pied (Total + Paiement) */
 .modal-footer {
     padding: 25px;
     background: #f8fafc;
     border-top: 1px solid #e2e8f0;
+    max-height: 60vh; /* Sécurité pour ne pas dépasser l'écran */
+    overflow-y: auto; /* Permet de scroller dans le footer si le clavier cache le bouton */
 }
 
 .summary { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -320,3 +438,135 @@ nav ul li a:hover { color: var(--mizan-blue); }
 }
 
 .cart-anim { animation: cartShake 0.4s ease; }
+
+/* --- FORMULAIRE PAIEMENT DYNAMIQUE (V4.0) --- */
+#payment-form {
+    display: none; /* Caché par défaut */
+    flex-direction: column;
+    gap: 15px;
+    animation: fadeIn 0.3s ease;
+    text-align: left;
+}
+
+#payment-form label {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
+#payment-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 0.95rem;
+    box-sizing: border-box; /* Important pour ne pas dépasser */
+}
+
+#payment-form input:focus {
+    outline: none;
+    border-color: var(--mizan-blue);
+    background: white;
+}
+
+.btn-confirm-pay { 
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white; 
+    padding: 16px; 
+    border: none; 
+    border-radius: 12px; 
+    font-weight: 800; 
+    cursor: pointer; 
+    width: 100%; 
+    margin-top: 15px; 
+    font-size: 1.1rem; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+    transition: all 0.3s ease;
+}
+.btn-confirm-pay:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+    filter: brightness(1.1);
+}
+
+.btn-back { background: transparent; color: #64748b; border: none; cursor: pointer; font-size: 0.85rem; text-decoration: underline; margin-top: 10px; align-self: center; width: 100%; }
+
+/* --- OPTIMISATION MOBILE MODAL (Pour voir le bouton) --- */
+@media (max-width: 480px) {
+    .modal-content {
+        width: 100%;
+        height: 100%; /* Plein écran sur mobile */
+        max-height: 100vh;
+        margin: 0;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .modal-body {
+        flex: 1; /* Prend tout l'espace disponible */
+    }
+
+    .modal-footer { 
+        padding: 20px; 
+        background: white;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.05); /* Petite ombre pour séparer du contenu */
+        z-index: 10;
+    }
+
+    #payment-form { gap: 12px; }
+    .btn-confirm-pay { margin-top: 10px; } 
+    .modal-header { padding: 20px; }
+}
+
+/* --- BOUTON FLOTTANT (V4.0) --- */
+.floating-cart {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--mizan-blue), #007bff);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 10px 25px rgba(56, 189, 248, 0.5);
+    cursor: pointer;
+    z-index: 1500; /* Au-dessus du contenu mais sous le modal */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: pulseFloat 3s infinite;
+}
+
+.floating-cart:hover { transform: scale(1.1) rotate(-10deg); }
+
+.floating-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid white;
+}
+
+@keyframes pulseFloat {
+    0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(56, 189, 248, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+}

@@ -383,6 +383,7 @@ body {
     .hero-section {
         padding: 140px 5% 80px; /* Plus d'espace en haut pour le header */
         height: auto;
+        min-height: auto; /* Permet au contenu de définir la hauteur */
         text-align: center;
     }
 
@@ -543,10 +544,12 @@ body {
 
 /* Ajustement Mobile pour les formulaires */
 @media (max-width: 600px) {
-    .login-container { padding: 10px; margin-top: 90px; }
-    .login-content { padding: 20px; } /* Moins de padding interne */
-    .infos-form { padding: 20px; }
-    .login-card { width: 100%; }
+    .login-container { padding: 15px; margin-top: 80px; }
+    .login-content { padding: 25px 20px; } 
+    .infos-form { padding: 20px 15px; }
+    .login-card { width: 100%; box-shadow: none; background: rgba(30, 41, 59, 0.5); } /* Plus léger sur mobile */
+    .login-card::before { display: none; } /* On enlève l'animation lourde sur mobile pour la perf */
+    .login-card::after { inset: 0; background: transparent; } /* On simplifie le fond */
 }
 
 .login-content h2 {
@@ -587,7 +590,7 @@ body {
     border: 1px solid #334155;
     border-radius: 10px;
     color: white;
-    font-size: 1rem;
+    font-size: 16px; /* Empêche le zoom automatique sur iOS */
     transition: all 0.3s ease;
 }
 
@@ -744,7 +747,7 @@ textarea {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     color: white;
-    font-size: 0.95rem;
+    font-size: 16px; /* Empêche le zoom automatique sur iOS */
     box-sizing: border-box;
 }
 

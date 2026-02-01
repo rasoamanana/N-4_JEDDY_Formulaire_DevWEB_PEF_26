@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DAR! Mizan - Nike Shop</title>
+    <link rel="icon" href="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg">
     <link rel="stylesheet" href="boutique.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -22,10 +23,6 @@
                     <li><a href="produits.html" class="active">Produits</a></li>
                 </ul>
                 <a href="connexion.html" class="btn-login">Login</a>
-                <div class="cart-icon" style="margin-left: 20px;">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count">0</span>
-                </div>
                 <div class="hamburger">
                     <i class="fas fa-bars"></i>
                 </div>
@@ -34,6 +31,18 @@
     </header>
 
     <section id="mizan-shop">
+        <!-- BARRE DE RECHERCHE ET FILTRES (V4.0) -->
+        <div class="shop-controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Rechercher une chaussure (ex: Pegasus)...">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn" onclick="trierPrix('asc')"><i class="fas fa-sort-amount-down-alt"></i> Prix Croissant</button>
+                <button class="filter-btn" onclick="trierPrix('desc')"><i class="fas fa-sort-amount-up"></i> Prix Décroissant</button>
+            </div>
+        </div>
+
         <div class="products-grid">
 
             <article class="card card-red">
@@ -193,21 +202,35 @@
         </div>
 
         <div class="modal-footer">
-            <div class="summary">
-                <p class="total-line">Total : <span id="modal-total">0.00</span> €</p>
-                <button class="btn-clear" onclick="viderPanier()">Vider</button>
+            <!-- VUE 1 : SÉLECTION -->
+            <div id="payment-selection">
+                <div class="summary">
+                    <p class="total-line">Total : <span id="modal-total">0.00</span> €</p>
+                    <button class="btn-clear" onclick="viderPanier()">Vider</button>
+                </div>
+
+                <p class="payment-title">Paiement sécurisé via</p>
+                <div class="payment-options">
+                    <button class="pay-btn orange" onclick="payer('Orange Money')"><i class="fas fa-money-bill-wave"></i> Orange</button>
+                    <button class="pay-btn mvola" onclick="payer('Mvola')"><i class="fas fa-mobile-alt"></i> Mvola</button>
+                    <button class="pay-btn paypal" onclick="payer('PayPal')"><i class="fab fa-paypal"></i> PayPal</button>
+                    <button class="pay-btn card-bank" onclick="payer('Carte Bancaire')"><i class="fas fa-credit-card"></i> Carte</button>
+                </div>
             </div>
 
-            <p class="payment-title">Paiement sécurisé via</p>
-            <div class="payment-options">
-                <button class="pay-btn orange" onclick="payer('Orange Money')"><i class="fas fa-money-bill-wave"></i> Orange</button>
-                <button class="pay-btn mvola" onclick="payer('Mvola')"><i class="fas fa-mobile-alt"></i> Mvola</button>
-                <button class="pay-btn paypal" onclick="payer('PayPal')"><i class="fab fa-paypal"></i> PayPal</button>
-                <button class="pay-btn card-bank" onclick="payer('Carte')"><i class="fas fa-credit-card"></i> Carte</button>
+            <!-- VUE 2 : FORMULAIRE DYNAMIQUE -->
+            <div id="payment-form">
+                <!-- Le contenu sera injecté par JS ici -->
             </div>
         </div>
     </div>
 </div>
+
+    <!-- BOUTON FLOTTANT PANIER (V4.0) -->
+    <div class="floating-cart" onclick="ouvrirModal()">
+        <div class="floating-count" id="float-cart-count">0</div>
+        <i class="fas fa-shopping-bag"></i>
+    </div>
 
     </body>
 
@@ -226,15 +249,6 @@
             const produit = { nom: nom, prix: prix };
             panier.push(produit);
             majAffichage();
-            
-            // Animation visuelle sur l'icône du panier (Feedback utilisateur)
-            const cartIcon = document.querySelector('.cart-icon i');
-            cartIcon.classList.add('cart-anim');
-            
-            // On retire la classe après l'animation pour pouvoir la rejouer
-            setTimeout(() => {
-                cartIcon.classList.remove('cart-anim');
-            }, 500);
         }
 
         function supprimerProduit(index) {
@@ -255,7 +269,7 @@
         function majAffichage() {
             const listConteneur = document.getElementById('cart-items-list');
             const totalAffichage = document.getElementById('modal-total');
-            const countAffichage = document.getElementById('cart-count');
+            const floatCountAffichage = document.getElementById('float-cart-count');
             
             let htmlGenere = "";
             let totalCalcul = 0;
@@ -280,15 +294,120 @@
 
             listConteneur.innerHTML = htmlGenere;
             totalAffichage.innerText = totalCalcul.toFixed(2);
-            countAffichage.innerText = panier.length;
+            if(floatCountAffichage) floatCountAffichage.innerText = panier.length;
+
+            // MISE À JOUR DYNAMIQUE DU FORMULAIRE DE PAIEMENT (Si ouvert)
+            const dynamicInput = document.getElementById('dynamic-pay-amount');
+            if(dynamicInput) {
+                dynamicInput.value = totalCalcul.toFixed(2) + " €";
+            }
         }
 
         function ouvrirModal() { document.getElementById('payment-modal').style.display = "block"; }
         function fermerModal() { document.getElementById('payment-modal').style.display = "none"; }
 
+        // --- LOGIQUE DE PAIEMENT INTELLIGENTE (V4.0) ---
         function payer(methode) {
             if (panier.length === 0) return alert("Panier vide !");
-            alert("Paiement " + methode + " : " + document.getElementById('modal-total').innerText + "€");
+            
+            const formContainer = document.getElementById('payment-form');
+            const selectionContainer = document.getElementById('payment-selection');
+            const total = document.getElementById('modal-total').innerText;
+
+            let inputsHtml = "";
+
+            // Génération du formulaire selon la méthode
+            if (methode === 'Orange Money' || methode === 'Mvola') {
+                inputsHtml = `
+                    <label>Numéro ${methode}</label>
+                    <input type="text" value="+261 " required style="font-weight: 600; letter-spacing: 1px;">
+                    <label>Code Secret (4 chiffres)</label>
+                    <input type="password" placeholder="••••" maxlength="4" required style="letter-spacing: 3px; font-size: 1.2rem;">
+                    <label>Montant à payer</label>
+                    <input type="text" id="dynamic-pay-amount" value="${total} €" readonly style="background: #e2e8f0; font-weight:bold; cursor: not-allowed;">
+                `;
+            } else if (methode === 'Carte Bancaire') {
+                inputsHtml = `
+                    <label>Numéro de Carte</label>
+                    <input type="text" placeholder="0000 0000 0000 0000" required>
+                    <div style="display:flex; gap:10px;">
+                        <div style="flex:1;">
+                            <label>Exp</label>
+                            <input type="text" placeholder="MM/AA" required>
+                        </div>
+                        <div style="flex:1;">
+                            <label>CVC</label>
+                            <input type="text" placeholder="123" required>
+                        </div>
+                    </div>
+                    <label>Montant</label>
+                    <input type="text" id="dynamic-pay-amount" value="${total} €" readonly style="background: #e2e8f0; font-weight:bold;">
+                `;
+            } else { // PayPal
+                inputsHtml = `
+                    <label>Email PayPal</label>
+                    <input type="email" placeholder="votre@email.com" required>
+                    <label>Montant</label>
+                    <input type="text" id="dynamic-pay-amount" value="${total} €" readonly style="background: #e2e8f0; font-weight:bold;">
+                `;
+            }
+
+            // Injection du HTML
+            formContainer.innerHTML = `
+                <h3 style="margin-top:0; color:var(--mizan-dark); font-size:1.1rem; display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-lock"></i> Paiement ${methode}
+                </h3>
+                ${inputsHtml}
+                <button class="btn-confirm-pay" onclick="confirmerPaiement('${methode}')">Confirmer et Payer</button>
+                <button class="btn-back" onclick="retourChoix()">Choisir une autre méthode</button>
+            `;
+
+            // Bascule de vue
+            selectionContainer.style.display = 'none';
+            formContainer.style.display = 'flex';
+        }
+
+        function retourChoix() {
+            document.getElementById('payment-form').style.display = 'none';
+            document.getElementById('payment-selection').style.display = 'block';
+        }
+
+        function confirmerPaiement(methode) {
+            // VÉRIFICATION STRICTE AVANT PAIEMENT
+            const inputs = document.querySelectorAll('#payment-form input');
+            let erreur = false;
+
+            inputs.forEach(input => {
+                // On ne vérifie pas le champ montant (qui est en lecture seule)
+                if (input.hasAttribute('readonly')) return;
+
+                // Si vide ou si c'est le préfixe +261 non complété
+                if (!input.value.trim() || input.value.trim() === "+261") {
+                    erreur = true;
+                    input.style.border = "2px solid red"; // Visuel rouge pour alerter
+                } else {
+                    input.style.border = "1px solid #cbd5e1"; // Remet la bordure normale
+                }
+            });
+
+            if (erreur) return alert("Veuillez remplir correctement le Numéro et le Code Secret !");
+
+            // Simulation "Génie" : Chargement -> Succès -> Livraison
+            const btn = document.querySelector('.btn-confirm-pay');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement en cours...';
+            btn.style.opacity = "0.7";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert("✅ Paiement " + methode + " accepté avec succès !");
+                alert("🚚 Votre commande est validée ! Livraison estimée : 48h.");
+                
+                // Reset total
+                panier = [];
+                majAffichage();
+                fermerModal();
+                retourChoix();
+            }, 2500); // Délai de 2.5 secondes pour faire réaliste
         }
 
         // GESTION DU HEADER (LOGIN / LOGOUT)
@@ -309,11 +428,6 @@
                 });
             }
 
-            // Ouvrir le panier au clic sur l'icône
-            document.querySelector('.cart-icon').addEventListener('click', function() {
-                ouvrirModal();
-            });
-
             // GESTION DU MENU BURGER
             const hamburger = document.querySelector('.hamburger');
             const navLinks = document.querySelector('.nav-links');
@@ -327,6 +441,42 @@
                     icon.classList.toggle('fa-times');
                 });
             }
+
+            // --- FONCTIONNALITÉS V4.0 (RECHERCHE & TRI) ---
+
+            // 1. Recherche dynamique
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('keyup', function(e) {
+                const term = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.card');
+
+                cards.forEach(card => {
+                    const title = card.querySelector('h3').innerText.toLowerCase();
+                    if(title.includes(term)) {
+                        card.style.display = 'flex'; // Affiche
+                    } else {
+                        card.style.display = 'none'; // Cache
+                    }
+                });
+            });
+
+            // 2. Tri par prix
+            window.trierPrix = function(ordre) {
+                const grid = document.querySelector('.products-grid');
+                const cards = Array.from(grid.querySelectorAll('.card'));
+
+                cards.sort((a, b) => {
+                    // On récupère le prix (ex: "129.99 €" -> 129.99)
+                    const prixA = parseFloat(a.querySelector('.price').innerText.replace(' €', ''));
+                    const prixB = parseFloat(b.querySelector('.price').innerText.replace(' €', ''));
+
+                    return ordre === 'asc' ? prixA - prixB : prixB - prixA;
+                });
+
+                // On réinjecte les cartes triées
+                grid.innerHTML = "";
+                cards.forEach(card => grid.appendChild(card));
+            };
         });
     </script>
 
