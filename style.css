@@ -152,27 +152,21 @@ body {
 
 /* Bouton Login/Logout */
 .btn-login {
-    padding: 10px 24px;
-    background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(56, 189, 248, 0));
-    color: var(--primary-blue);
-    border: 1px solid rgba(56, 189, 248, 0.5);
+    padding: 12px 28px;
+    background: var(--primary-blue); /* Couleur pleine pour faire "Bouton Normal" */
+    color: var(--dark-bg); /* Texte foncé pour le contraste */
+    border: none;
     border-radius: 50px; /* Forme pilule très moderne */
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-weight: 700;
+    font-size: 0.95rem;
     text-decoration: none;
     transition: all 0.3s ease;
     white-space: nowrap;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px; /* Espace entre l'icône et le texte */
-    backdrop-filter: blur(5px);
-    
-    /* Gestion intelligente du texte trop long */
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: middle;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(56, 189, 248, 0.3);
 }
 
 /* Ajout automatique de l'icône utilisateur via CSS */
@@ -184,11 +178,10 @@ body {
 }
 
 .btn-login:hover {
-    background: var(--primary-blue);
+    background: #7dd3fc; /* Un peu plus clair au survol */
     color: var(--dark-bg);
-    box-shadow: 0 0 25px rgba(56, 189, 248, 0.5); /* Lueur intense */
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
     transform: translateY(-2px);
-    border-color: var(--primary-blue);
 }
 
 /* --- MENU BURGER (MOBILE) --- */
@@ -238,14 +231,13 @@ body {
 
     /* Sur mobile, le bouton prend sa place dans la liste */
     .btn-login {
-        margin-top: 10px;
-        width: 85%; /* Largeur confortable */
-        max-width: 400px;
-        padding: 15px; /* Plus facile à toucher */
-        font-size: 1.1rem;
-        background: rgba(56, 189, 248, 0.1); /* Fond plus visible sur mobile */
-        box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
-        justify-content: center;
+        margin-top: 20px;
+        width: 80%; /* Largeur maîtrisée */
+        max-width: 350px;
+        padding: 14px;
+        font-size: 1rem;
+        /* On garde le fond bleu uni défini plus haut */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
     
     .nav-right-group { gap: 15px; }
