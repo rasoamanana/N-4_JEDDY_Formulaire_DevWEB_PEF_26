@@ -226,7 +226,10 @@ body {
     }
 
     .nav-links li {
-        margin: 25px 0;
+        margin: 15px 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
     }
 
     .nav-links a {
@@ -235,13 +238,14 @@ body {
 
     /* Sur mobile, le bouton prend sa place dans la liste */
     .btn-login {
-        margin-top: 25px;
-        width: 80%; /* Largeur confortable */
-        max-width: 300px;
+        margin-top: 10px;
+        width: 85%; /* Largeur confortable */
+        max-width: 400px;
         padding: 15px; /* Plus facile à toucher */
         font-size: 1.1rem;
         background: rgba(56, 189, 248, 0.1); /* Fond plus visible sur mobile */
         box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+        justify-content: center;
     }
     
     .nav-right-group { gap: 15px; }
