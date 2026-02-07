@@ -7,6 +7,7 @@
     <link rel="icon" href="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="common.js" defer></script> <!-- Ajout du script commun -->
 </head>
 <body>
 
@@ -88,85 +89,6 @@
     </footer>
 
     <script>
-        // GESTION DU THÈME (V5.0)
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            const btn = document.querySelector('.theme-btn i');
-            if(btn) btn.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
-        }
-        // Charger le thème au démarrage
-        if(localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }
-
-        // Vérifier si l'utilisateur est connecté pour changer le bouton Login en Logout
-        document.addEventListener("DOMContentLoaded", function() {
-            
-            // --- COMPTEUR DE VISITES (V6.0) ---
-            // Si l'utilisateur n'a pas encore été compté dans cette session (fenêtre ouverte)
-            if (!sessionStorage.getItem('session_counted')) {
-                let totalVisits = parseInt(localStorage.getItem('mizan_total_visits') || '0');
-                totalVisits++; // On ajoute 1 visiteur
-                localStorage.setItem('mizan_total_visits', totalVisits); // On sauvegarde
-                sessionStorage.setItem('session_counted', 'true'); // On marque cette session comme comptée
-            }
-
-            const currentUser = localStorage.getItem('currentUser');
-            const loginBtn = document.querySelector('.btn-login');
-
-            if (currentUser && loginBtn) {
-                loginBtn.textContent = "Se déconnecter";
-                loginBtn.href = "#";
-                loginBtn.style.backgroundColor = "#dc3545"; 
-                loginBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if(confirm("Voulez-vous vous déconnecter ?")) {
-                        localStorage.removeItem('currentUser');
-                        localStorage.removeItem('remembered_email'); // On oublie l'email
-                        window.location.reload();
-                    }
-                });
-            }
-
-            // Mettre à jour l'icône thème si nécessaire
-            if(localStorage.getItem('theme') === 'light') {
-                const btn = document.querySelector('.theme-btn i');
-                if(btn) btn.className = 'fas fa-moon';
-            }
-
-            // GESTION DU MENU BURGER
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.nav-links');
-
-            if(hamburger) {
-                hamburger.addEventListener('click', () => {
-                    navLinks.classList.toggle('active');
-                    // Change l'icône (Barres <-> Croix)
-                    const icon = hamburger.querySelector('i');
-                    icon.classList.toggle('fa-bars');
-                    icon.classList.toggle('fa-times');
-                });
-
-                // Fermeture auto au clic sur un lien
-                document.querySelectorAll('.nav-links a, .nav-links button').forEach(item => {
-                    item.addEventListener('click', () => {
-                        navLinks.classList.remove('active');
-                        const icon = hamburger.querySelector('i');
-                        if(icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
-                    });
-                });
-            }
-        });
-
-        // Gestion du rétrécissement du header au scroll (V5.4)
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('.header-pro');
-            if (window.scrollY > 50) { // Se déclenche après 50px de scroll
-                header.classList.add('shrink');
-            } else {
-                header.classList.remove('shrink');
-            }
-        });
     </script>
 </body>
 </html>

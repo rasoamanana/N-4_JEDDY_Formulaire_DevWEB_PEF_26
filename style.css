@@ -776,6 +776,78 @@ body.light-mode .btn-secondary {
     box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
 }
 
+/* --- PASSWORD TOGGLE (V6.3) --- */
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-gray);
+    font-size: 1rem;
+    transition: color 0.3s;
+    z-index: 10;
+}
+
+.toggle-password:hover {
+    color: var(--primary-blue);
+}
+
+/* --- PASSWORD STRENGTH (V6.4) --- */
+.strength-meter {
+    margin-top: 8px;
+}
+
+.strength-bar {
+    height: 4px;
+    background: #334155;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.strength-bar-fill {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    display: block;
+}
+
+.strength-text {
+    font-size: 0.75rem;
+    margin-top: 5px;
+    text-align: right;
+    font-weight: 600;
+    min-height: 1.2em;
+}
+
+/* Niveaux */
+.strength-weak .strength-bar-fill { width: 33%; background-color: #ef4444; }
+.strength-weak .strength-text { color: #ef4444; }
+
+.strength-medium .strength-bar-fill { width: 66%; background-color: #fbbf24; }
+.strength-medium .strength-text { color: #fbbf24; }
+
+.strength-strong .strength-bar-fill { width: 100%; background-color: #2ed573; }
+.strength-strong .strength-text { color: #2ed573; }
+
+/* --- ANIMATION SECOUSSE (V6.5) --- */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+}
+
+.shake {
+    animation: shake 0.4s ease-in-out;
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
 /* --- OPTIONS FORMULAIRE (V6.2) --- */
 .form-options {
     display: flex;
@@ -1213,4 +1285,62 @@ textarea:focus {
 @media (max-width: 600px) {
     .about-content h2 { font-size: 2.2rem; }
     .features-grid { grid-template-columns: 1fr; }
+}
+
+/* --- FORMULAIRE SLIDE (WIZARD) V8.0 --- */
+.form-slider-container {
+    width: 100%;
+    overflow: hidden; /* Cache les étapes suivantes */
+    position: relative;
+}
+
+.form-slider-wrapper {
+    display: flex;
+    width: 300%; /* 3 étapes = 300% de largeur */
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Animation fluide */
+}
+
+.form-step {
+    width: 33.333%; /* Chaque étape prend 1/3 de la largeur */
+    flex-shrink: 0;
+    padding: 5px;
+    opacity: 0; /* Caché par défaut pour l'effet */
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.form-step.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Sélection Genre */
+.gender-options {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.gender-card {
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    padding: 20px;
+    width: 120px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.gender-card:hover { border-color: var(--primary-blue); transform: translateY(-3px); }
+.gender-card.selected { background: rgba(56, 189, 248, 0.1); border-color: var(--primary-blue); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+.gender-card i { font-size: 2rem; margin-bottom: 10px; color: var(--text-gray); }
+.gender-card.selected i { color: var(--primary-blue); }
+
+.nav-btns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
 }

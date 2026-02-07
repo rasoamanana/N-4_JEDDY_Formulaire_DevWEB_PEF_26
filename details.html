@@ -336,21 +336,36 @@
         function chargerCommentaires(nomProduit) {
             const list = document.getElementById('comments-list');
             const comments = JSON.parse(localStorage.getItem('comments_' + nomProduit) || '[]');
+            const currentUser = localStorage.getItem('currentUser');
+            const isAdmin = currentUser === 'Jeddy';
             
             if(comments.length === 0) {
                 list.innerHTML = '<p style="color: var(--text-gray); font-style: italic;">Aucun avis pour le moment. Soyez le premier !</p>';
                 return;
             }
 
-            list.innerHTML = comments.map(c => `
+            list.innerHTML = comments.map((c, index) => `
                 <div style="background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--border-color);">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                         <strong style="color: var(--text-white);">${c.user}</strong>
-                        <span style="color: var(--text-gray); font-size: 0.85rem;">${c.date}</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="color: var(--text-gray); font-size: 0.85rem;">${c.date}</span>
+                            ${isAdmin ? `<button onclick="supprimerCommentaire(${index})" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem;" title="Supprimer le commentaire"><i class="fas fa-trash-alt"></i></button>` : ''}
+                        </div>
                     </div>
                     <p style="color: var(--text-gray); margin: 0; line-height: 1.6;">${c.text}</p>
                 </div>
             `).join('');
+        }
+
+        function supprimerCommentaire(index) {
+            if(confirm("Voulez-vous vraiment supprimer ce commentaire ?")) {
+                const p = JSON.parse(localStorage.getItem('selectedProduct'));
+                const comments = JSON.parse(localStorage.getItem('comments_' + p.nom) || '[]');
+                comments.splice(index, 1); // Supprime le commentaire à l'index donné
+                localStorage.setItem('comments_' + p.nom, JSON.stringify(comments));
+                chargerCommentaires(p.nom); // Rafraîchit la liste
+            }
         }
 
         function ajouterCommentaire() {
@@ -363,7 +378,13 @@
                 return;
             }
 
-            const newComment = { user: nameInput.value, text: textInput.value, date: new Date().toLocaleDateString('fr-FR') };
+            // Options pour formater la date et l'heure en français
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+            const newComment = { 
+                user: nameInput.value.trim(), 
+                text: textInput.value.trim(), 
+                date: new Date().toLocaleString('fr-FR', options) 
+            };
             const comments = JSON.parse(localStorage.getItem('comments_' + p.nom) || '[]');
             comments.unshift(newComment); // Ajoute au début de la liste
             localStorage.setItem('comments_' + p.nom, JSON.stringify(comments));

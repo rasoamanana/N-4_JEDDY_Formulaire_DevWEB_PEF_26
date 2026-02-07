@@ -6,6 +6,7 @@
     <title>DAR! Mizan | Sport Professionnel</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="body-login">
     <header class="header-pro">
@@ -34,23 +35,73 @@
             <p class="subtitle">Rejoignez la communauté et profitez d'avantages exclusifs.</p>
 
             <form class="infos-form" style="background: none; box-shadow: none; padding: 0; width: 100%;">
-                <div class="input-box">
-                    <label>Nom d'utilisateur</label>
-                    <input type="text" id="reg-nom" placeholder="Ex: Jeddy" required>
+                
+                <div class="form-slider-container">
+                    <div class="form-slider-wrapper" id="slider-wrapper">
+                        
+                        <!-- ÉTAPE 1 : IDENTITÉ -->
+                        <div class="form-step active" data-step="1">
+                            <div class="input-box">
+                                <label>Nom d'utilisateur</label>
+                                <input type="text" id="reg-nom" placeholder="Ex: Jeddy">
+                            </div>
+                            <div class="input-box">
+                                <label>Adresse e-mail</label>
+                                <input type="email" id="reg-email" placeholder="votre@email.com">
+                            </div>
+                            <button type="button" class="btn-glow" onclick="nextStep(1)">Suivant <i class="fas fa-arrow-right"></i></button>
+                        </div>
+
+                        <!-- ÉTAPE 2 : GENRE -->
+                        <div class="form-step" data-step="2">
+                            <h3 style="text-align:center; font-size:1.1rem; margin-bottom:15px; color:var(--text-white);">Vous êtes ?</h3>
+                            <input type="hidden" id="reg-genre"> <!-- Champ caché pour stocker le choix -->
+                            
+                            <div class="gender-options">
+                                <div class="gender-card" onclick="selectGender('Fille', this)">
+                                    <i class="fas fa-venus"></i>
+                                    <p>Une Fille</p>
+                                </div>
+                                <div class="gender-card" onclick="selectGender('Garçon', this)">
+                                    <i class="fas fa-mars"></i>
+                                    <p>Un Garçon</p>
+                                </div>
+                            </div>
+                            <div class="nav-btns">
+                                <button type="button" class="btn-secondary" onclick="prevStep(2)" style="flex:1;">Retour</button>
+                                <button type="button" class="btn-glow" onclick="nextStep(2)" style="flex:1; margin-top:0;">Suivant</button>
+                            </div>
+                        </div>
+
+                        <!-- ÉTAPE 3 : SÉCURITÉ -->
+                        <div class="form-step" data-step="3">
+                            <div class="input-box">
+                                <label>Mot de passe</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="reg-mdp" placeholder="Au moins 6 caractères">
+                                    <i class="fas fa-eye toggle-password" id="toggleRegMdp"></i>
+                                </div>
+                            </div>
+                            <!-- BARRE DE FORCE (V6.4) -->
+                            <div class="strength-meter" id="strength-meter">
+                                <div class="strength-bar"><span class="strength-bar-fill"></span></div>
+                                <div class="strength-text"></div>
+                            </div>
+                            <div class="input-box">
+                                <label>Confirmer le mot de passe</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="reg-mdp-confirm" placeholder="Retapez votre mot de passe">
+                                    <i class="fas fa-eye toggle-password" id="toggleRegMdpConfirm"></i>
+                                </div>
+                            </div>
+                            <div class="nav-btns">
+                                <button type="button" class="btn-secondary" onclick="prevStep(3)" style="flex:1;">Retour</button>
+                                <button type="submit" class="btn-glow" style="flex:1; margin-top:0;">Finaliser</button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-                <div class="input-box">
-                    <label>Adresse e-mail</label>
-                    <input type="email" id="reg-email" placeholder="votre@email.com" required>
-                </div>
-                <div class="input-box">
-                    <label>Mot de passe</label>
-                    <input type="password" id="reg-mdp" placeholder="Au moins 6 caractères" required>
-                </div>
-                <div class="input-box">
-                    <label>Confirmer le mot de passe</label>
-                    <input type="password" id="reg-mdp-confirm" placeholder="Retapez votre mot de passe" required>
-                </div>
-                <button type="submit" class="btn-glow" style="margin-top: 20px;">Créer mon compte</button>
             </form>
 
             <div class="login-footer" style="margin-top: 25px;">
@@ -86,22 +137,140 @@
             if(btn) btn.className = 'fas fa-moon';
         }
 
+        // --- TOGGLE PASSWORD (V6.3) ---
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggle = document.getElementById(toggleId);
+            const input = document.getElementById(inputId);
+            if(toggle && input) {
+                toggle.addEventListener('click', function() {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            }
+        }
+        setupPasswordToggle('toggleRegMdp', 'reg-mdp');
+        setupPasswordToggle('toggleRegMdpConfirm', 'reg-mdp-confirm');
+
+        // --- PASSWORD STRENGTH METER (V6.4) ---
+        const mdpInput = document.getElementById('reg-mdp');
+        const meterContainer = document.getElementById('strength-meter');
+        
+        if(mdpInput && meterContainer) {
+            const meterText = meterContainer.querySelector('.strength-text');
+            
+            mdpInput.addEventListener('input', function() {
+                const val = this.value;
+                let score = 0;
+
+                // Algorithme simple de score
+                if(val.length > 0) {
+                    if(val.length >= 6) score++;
+                    if(val.length >= 10) score++;
+                    if(/[A-Z]/.test(val)) score++;
+                    if(/[0-9]/.test(val)) score++;
+                    if(/[^A-Za-z0-9]/.test(val)) score++;
+                }
+
+                meterContainer.className = 'strength-meter'; // Reset classes
+                
+                if(val.length === 0) {
+                    meterText.innerText = '';
+                } else if (val.length < 6) {
+                    meterContainer.classList.add('strength-weak');
+                    meterText.innerText = 'Trop court';
+                } else if (score < 3) {
+                    meterContainer.classList.add('strength-weak');
+                    meterText.innerText = 'Faible';
+                } else if (score < 5) {
+                    meterContainer.classList.add('strength-medium');
+                    meterText.innerText = 'Moyen';
+                } else {
+                    meterContainer.classList.add('strength-strong');
+                    meterText.innerText = 'Fort';
+                }
+            });
+        }
+
+        // --- LOGIQUE DU SLIDER (V8.0) ---
+        let currentStep = 1;
+
+        function updateSlide() {
+            const wrapper = document.getElementById('slider-wrapper');
+            const steps = document.querySelectorAll('.form-step');
+            
+            // Déplace le wrapper (0%, -33.33%, -66.66%)
+            wrapper.style.transform = `translateX(-${(currentStep - 1) * 33.333}%)`;
+            
+            // Gère l'opacité pour l'effet visuel
+            steps.forEach((step, index) => {
+                if(index + 1 === currentStep) step.classList.add('active');
+                else step.classList.remove('active');
+            });
+        }
+
+        function nextStep(step) {
+            // Validation avant de passer à l'étape suivante
+            if (step === 1) {
+                const nom = document.getElementById('reg-nom').value.trim();
+                const email = document.getElementById('reg-email').value.trim();
+                if (!nom || !email) return alert("Veuillez remplir votre nom et email.");
+                if (!email.includes('@')) return alert("Email invalide.");
+            }
+            
+            if (step === 2) {
+                const genre = document.getElementById('reg-genre').value;
+                if (!genre) return alert("Veuillez sélectionner un genre.");
+            }
+
+            currentStep++;
+            updateSlide();
+        }
+
+        function prevStep(step) {
+            currentStep--;
+            updateSlide();
+        }
+
+        function selectGender(gender, element) {
+            document.getElementById('reg-genre').value = gender;
+            
+            // Visuel de sélection
+            document.querySelectorAll('.gender-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
         // Gestion de l'inscription
         document.querySelector('.infos-form').addEventListener('submit', function(e) {
             e.preventDefault(); // Empêche l'envoi classique du formulaire
             
             const nom = document.getElementById('reg-nom').value.trim();
             const email = document.getElementById('reg-email').value.trim();
+            const genre = document.getElementById('reg-genre').value;
             const mdp = document.getElementById('reg-mdp').value;
             const mdpConfirm = document.getElementById('reg-mdp-confirm').value;
 
-            if(!nom || !email || !mdp || !mdpConfirm) {
+            if(!nom || !email || !mdp || !mdpConfirm || !genre) {
                 alert("Veuillez remplir tous les champs.");
                 return;
             }
 
-            if(mdp.length < 6) {
-                alert("Le mot de passe doit contenir au moins 6 caractères.");
+            // Validation Force & Animation Secousse (V6.5)
+            let score = 0;
+            if(mdp.length >= 6) score++;
+            if(mdp.length >= 10) score++;
+            if(/[A-Z]/.test(mdp)) score++;
+            if(/[0-9]/.test(mdp)) score++;
+            if(/[^A-Za-z0-9]/.test(mdp)) score++;
+
+            if(mdp.length < 6 || score < 3) {
+                const mdpInput = document.getElementById('reg-mdp');
+                mdpInput.classList.add('shake');
+                setTimeout(() => mdpInput.classList.remove('shake'), 500); // Retire la classe après l'anim
+                
+                if(mdp.length < 6) alert("Le mot de passe est trop court (min 6 caractères).");
+                else alert("Mot de passe trop faible ! Ajoutez des majuscules, chiffres ou symboles.");
                 return;
             }
 
@@ -127,11 +296,21 @@
                 return;
             }
             
-            users.push({ username: nom, email: email, password: mdp });
+            users.push({ username: nom, email: email, password: mdp, genre: genre });
             localStorage.setItem('users', JSON.stringify(users));
 
-            alert("Inscription réussie ! Vous allez être redirigé vers la page de connexion.");
-            window.location.href = "connexion.html";
+            // Animation Confettis (V8.1)
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#38bdf8', '#ffffff', '#fbbf24'] // Bleu, Blanc, Or
+            });
+
+            setTimeout(() => {
+                alert("Inscription réussie ! Vous allez être redirigé vers la page de connexion.");
+                window.location.href = "connexion.html";
+            }, 2000); // Délai de 2 secondes pour voir l'animation
         });
 
         // GESTION DU MENU BURGER

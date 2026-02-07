@@ -152,9 +152,10 @@
             <div id="pagination-controls"></div>
 
             <div class="separateur">Zone de Danger</div>
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button onclick="resetProduits()" class="btn-glow" style="background:#ef4444; color:white; font-size: 0.9rem; padding: 10px; flex: 1;"><i class="fas fa-bomb"></i> Reset Produits</button>
                 <button onclick="resetVisiteurs()" class="btn-glow" style="background:#f97316; color:white; font-size: 0.9rem; padding: 10px; flex: 1;"><i class="fas fa-user-slash"></i> Reset Visiteurs</button>
+                <button onclick="resetCommentaires()" class="btn-glow" style="background:#a29bfe; color:white; font-size: 0.9rem; padding: 10px; flex: 1;"><i class="fas fa-comment-slash"></i> Reset Avis</button>
             </div>
         </div>
     </div>
@@ -474,6 +475,102 @@
                 showToast("Compteur de visiteurs réinitialisé.", "success");
             }
         }
+
+        function resetCommentaires() {
+            if(confirm("Voulez-vous supprimer TOUS les commentaires clients ?")) {
+                // On cherche et supprime toutes les clés commençant par 'comments_'
+                Object.keys(localStorage).forEach(key => {
+                    if(key.startsWith('comments_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                chargerNotificationsAdmin(); // Mise à jour immédiate du panneau
+                showToast("Tous les commentaires ont été supprimés.", "success");
+            }
+        }
+
+        // --- GESTION DU CENTRE DE NOTIFICATIONS (V7.0) ---
+        function toggleNotifPanel() {
+            const panel = document.getElementById('notif-panel');
+            panel.classList.toggle('active');
+            if(panel.classList.contains('active')) {
+                chargerNotificationsAdmin();
+            }
+        }
+
+        function chargerNotificationsAdmin() {
+            const list = document.getElementById('notif-list');
+            const badge = document.getElementById('notif-count');
+            if (!list || !badge) return;
+
+            list.innerHTML = '';
+            let totalNotifs = 0;
+            let htmlContent = '';
+
+            // 1. Scanner le LocalStorage pour trouver les commentaires et notes
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+
+                // A. LES COMMENTAIRES
+                if (key.startsWith('comments_')) {
+                    try {
+                        const productName = key.replace('comments_', '');
+                        const comments = JSON.parse(localStorage.getItem(key) || '[]');
+                        
+                        if (Array.isArray(comments)) {
+                            comments.forEach(c => {
+                                totalNotifs++;
+                                // Sécurisation : on vérifie que les données existent avant de les afficher
+                                const dateAffiche = c.date ? c.date.toString().split(',')[0] : 'Date inconnue';
+                                const userAffiche = c.user || 'Anonyme';
+                                const textAffiche = c.text || '';
+
+                                htmlContent += `
+                                    <div class="notif-item">
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                            <strong style="color:var(--primary-blue); font-size:0.85rem;">${userAffiche}</strong>
+                                            <small style="color:var(--text-gray);">${dateAffiche}</small>
+                                        </div>
+                                        <div style="font-size:0.8rem; color:var(--text-white); margin-bottom:5px;">
+                                            <i class="fas fa-comment-dots" style="color:#a29bfe;"></i> ${textAffiche}
+                                        </div>
+                                        <div style="font-size:0.75rem; color:var(--text-gray); font-style:italic;">
+                                            Sur : ${productName}
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Erreur lecture notif :", e);
+                    }
+                }
+
+                // B. LES NOTES (Optionnel : affiche juste la note actuelle)
+                if (key.startsWith('rating_')) {
+                    // On pourrait lister les notes ici si besoin, mais les commentaires sont plus pertinents
+                }
+            }
+
+            if(htmlContent === '') {
+                htmlContent = '<p style="color:var(--text-gray); text-align:center;">Aucune activité récente.</p>';
+            }
+
+            list.innerHTML = htmlContent;
+            badge.innerText = totalNotifs;
+            
+            // Cache le badge s'il n'y a pas de notif (plus propre)
+            if(totalNotifs > 0) {
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Charger le compteur au démarrage
+        document.addEventListener("DOMContentLoaded", function() {
+            chargerNotificationsAdmin(); // Chargement immédiat pour voir les notifs direct
+        });
 
         function logoutAdmin() {
             if(confirm("Se déconnecter de l'administration ?")) {

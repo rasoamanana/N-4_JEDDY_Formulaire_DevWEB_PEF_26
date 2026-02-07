@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="boutique.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="common.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
@@ -125,36 +127,9 @@
     </body>
 
     <script>
-       // --- GESTION AVANCÉE DU THÈME (V5.3) ---
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            updateThemeIcon(isLight);
-        }
-
-        function updateThemeIcon(isLight) {
-            const themeIcon = document.querySelector('.theme-btn i');
-            if(themeIcon) themeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
-        }
-
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            let isLight;
-
-            if (savedTheme) { // 1. Priorité au choix de l'utilisateur
-                isLight = savedTheme === 'light';
-            } else { // 2. Sinon, détection du système
-                isLight = window.matchMedia && !window.matchMedia('(prefers-color-scheme: dark)').matches;
-            }
-
-            if (isLight) document.body.classList.add('light-mode');
-            updateThemeIcon(isLight);
-        }
-        initializeTheme(); // Appel immédiat pour éviter le flash de couleur
 
        let allProducts = []; // Stocke tous les produits pour le tri et la recherche
-       let panier = []; 
+       let panier = JSON.parse(localStorage.getItem('mizan_cart') || '[]'); 
 
         function ajouterAuPanier(nom, prix) {
             // VÉRIFICATION DE LA CONNEXION
@@ -167,6 +142,7 @@
 
             const produit = { nom: nom, prix: prix };
             panier.push(produit);
+            localStorage.setItem('mizan_cart', JSON.stringify(panier)); // Sauvegarde
             majAffichage();
         }
 
@@ -179,6 +155,7 @@
 
         function supprimerProduit(index) {
             panier.splice(index, 1);
+            localStorage.setItem('mizan_cart', JSON.stringify(panier)); // Sauvegarde
             majAffichage();
         }
 
@@ -186,6 +163,7 @@
             if(panier.length > 0) {
                 if(confirm("Vider tout le panier ?")) {
                     panier = [];
+                    localStorage.removeItem('mizan_cart'); // Nettoyage
                     majAffichage();
                     fermerModal();
                 }
@@ -325,14 +303,27 @@
             btn.disabled = true;
 
             setTimeout(() => {
-                alert("✅ Paiement " + methode + " accepté avec succès !");
-                alert("🚚 Votre commande est validée ! Livraison estimée : 48h.");
+                // Animation Confettis (V8.1)
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#38bdf8', '#ffffff', '#fbbf24'] // Bleu, Blanc, Or
+                });
                 
-                // Reset total
-                panier = [];
-                majAffichage();
-                fermerModal();
-                retourChoix();
+                jouerSonCaisse(); // Son de validation (Cha-Ching !)
+
+                setTimeout(() => {
+                    alert("✅ Paiement " + methode + " accepté avec succès !");
+                    alert("🚚 Votre commande est validée ! Livraison estimée : 48h.");
+                    
+                    // Reset total
+                    panier = [];
+                    localStorage.removeItem('mizan_cart'); // Nettoyage après achat
+                    majAffichage();
+                    fermerModal();
+                    retourChoix();
+                }, 1000); // Petit délai pour profiter des confettis
             }, 2500); // Délai de 2.5 secondes pour faire réaliste
         }
 
@@ -346,32 +337,11 @@
                 document.getElementById('admin-link').style.display = 'inline';
             }
 
-            const loginBtn = document.querySelector('.btn-login');
-            if (currentUser && loginBtn) {
-                loginBtn.textContent = "Se déconnecter (" + currentUser + ")";
-                loginBtn.href = "#";
-                loginBtn.style.backgroundColor = "#dc3545"; // Rouge pour déconnexion
-                loginBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if(confirm("Voulez-vous vous déconnecter ?")) { 
-                        localStorage.removeItem('currentUser'); 
-                        localStorage.removeItem('remembered_email'); // On oublie l'email
-                        window.location.reload(); }
-                });
-            }
-
-            // Gérer le menu burger
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.nav-links');
-            if(hamburger) {
-                hamburger.addEventListener('click', () => { navLinks.classList.toggle('active'); hamburger.querySelector('i').classList.toggle('fa-bars'); hamburger.querySelector('i').classList.toggle('fa-times'); });
-                document.querySelectorAll('.nav-links a, .nav-links button').forEach(item => {
-                    item.addEventListener('click', () => { navLinks.classList.remove('active'); const icon = hamburger.querySelector('i'); if(icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); } });
-                });
-            }
-
             // Charger les produits et configurer les filtres
             initialiserBoutique();
+
+            // Mettre à jour l'affichage du panier sauvegardé
+            majAffichage();
 
             // Configurer la recherche
             const searchInput = document.getElementById('search-input');
@@ -380,16 +350,6 @@
                 const produitsFiltres = allProducts.filter(p => p.nom.toLowerCase().includes(term));
                 renderProducts(produitsFiltres);
             });
-        });
-
-                // Gestion du rétrécissement du header au scroll (V5.4)
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('.header-pro');
-            if (window.scrollY > 50) { // Se déclenche après 50px de scroll
-                header.classList.add('shrink');
-            } else {
-                header.classList.remove('shrink');
-            }
         });
 
 
@@ -459,6 +419,41 @@
                 return ordre === 'asc' ? a.prix - b.prix : b.prix - a.prix;
             });
             renderProducts(allProducts); // Ré-affiche les produits triés
+        }
+
+        // --- SON CAISSE ENREGISTREUSE (V8.2) ---
+        function jouerSonCaisse() {
+            // Création du contexte audio
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const t = audioCtx.currentTime;
+
+            // 1. Le "Cha" (Bruit mécanique rapide)
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            
+            osc1.type = 'square';
+            osc1.frequency.setValueAtTime(200, t);
+            osc1.frequency.exponentialRampToValueAtTime(100, t + 0.1);
+            gain1.gain.setValueAtTime(0.05, t);
+            gain1.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
+            osc1.start(t);
+            osc1.stop(t + 0.1);
+
+            // 2. Le "Ching" (Son de pièce/cloche)
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(1200, t + 0.05); // Note de départ
+            osc2.frequency.exponentialRampToValueAtTime(2000, t + 0.1); // Monte vite vers l'aigu
+            gain2.gain.setValueAtTime(0.1, t + 0.05);
+            gain2.gain.exponentialRampToValueAtTime(0.001, t + 1.5); // Résonne longtemps
+            osc2.start(t + 0.05);
+            osc2.stop(t + 1.5);
         }
     </script>
 
