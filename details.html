@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails Produit - DAR! Mizan</title>
+    <link rel="icon" href="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="boutique.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Ajustements spécifiques pour la page détails */
+        .detail-card {
+            max-width: 1000px; 
+            width: 90%; 
+            display: flex; 
+            flex-direction: row; 
+            gap: 50px; 
+            padding: 50px; 
+            align-items: center; 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        @media (max-width: 900px) {
+            .detail-card { flex-direction: column; padding: 30px; }
+            #detail-img { transform: none !important; margin-bottom: 30px; max-width: 100% !important; }
+        }
+        /* Ajustement grille similaires */
+        .similar-section .card { min-width: 0; } /* Reset pour la grille */
+        @media (max-width: 900px) { .similar-section .products-grid { display: flex; overflow-x: auto; padding-bottom: 20px; } .similar-section .card { min-width: 250px; } }
+        
+        /* Système de notation */
+        .stars { display: inline-flex; gap: 5px; font-size: 1.3rem; cursor: pointer; }
+        .stars i { transition: transform 0.2s, color 0.2s; }
+        .stars i:hover { transform: scale(1.2); }
+
+        /* Zoom Image au survol */
+        #detail-img:hover {
+            transform: rotate(-5deg) scale(1.35) !important; /* Zoom + léger redressement */
+            filter: drop-shadow(0 40px 60px rgba(56, 189, 248, 0.4)) !important; /* Lueur bleue */
+            cursor: zoom-in;
+        }
+    </style>
+</head>
+<body class="body-login">
+
+    <header class="header-pro">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg" alt="Logo" class="logo-img">
+                DAR! <span>Mizan</span>
+            </div>
+            <div class="nav-right-group">
+                <ul class="nav-links">
+                    <li><a href="produits.html"><i class="fas fa-arrow-left"></i> Retour Boutique</a></li>
+                </ul>
+                <button onclick="toggleTheme()" class="theme-btn"><i class="fas fa-sun"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="login-container" style="align-items: center; min-height: 85vh;">
+        <div class="detail-card">
+             
+             <div id="detail-img-wrapper" style="flex: 1; display: flex; justify-content: center;">
+                <img id="detail-img" src="" alt="Chaussure" style="width: 100%; max-width: 450px; border-radius: 20px; transform: rotate(-12deg) scale(1.1); filter: drop-shadow(0 30px 40px rgba(0,0,0,0.6)); transition: 0.5s;">
+             </div>
+
+             <div id="detail-info" style="flex: 1; color: var(--text-white);">
+                <span id="detail-badge" class="badge" style="position: relative; top: 0; left: 0; margin-bottom: 20px; font-size: 0.9rem; display: inline-block;">NOUVEAU</span>
+                <h1 id="detail-nom" style="font-size: 2.8rem; margin-bottom: 10px; line-height: 1.1; font-weight: 900;">Nom Produit</h1>
+                <p id="detail-price" style="font-size: 2.2rem; color: var(--primary-blue); font-weight: bold; margin-bottom: 25px;">0.00 €</p>
+                
+                <!-- SYSTÈME DE NOTATION -->
+                <div class="rating-box" style="margin-bottom: 25px; display: flex; align-items: center; gap: 15px;">
+                    <div class="stars" id="star-container" onmouseleave="resetStars()">
+                        <i class="far fa-star" onclick="noter(1)" onmouseover="survolEtoile(1)"></i>
+                        <i class="far fa-star" onclick="noter(2)" onmouseover="survolEtoile(2)"></i>
+                        <i class="far fa-star" onclick="noter(3)" onmouseover="survolEtoile(3)"></i>
+                        <i class="far fa-star" onclick="noter(4)" onmouseover="survolEtoile(4)"></i>
+                        <i class="far fa-star" onclick="noter(5)" onmouseover="survolEtoile(5)"></i>
+                    </div>
+                    <span id="rating-text" style="color: var(--text-gray); font-size: 0.9rem;">(0 avis)</span>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.03); padding: 25px; border-radius: 20px; margin-bottom: 35px; border: 1px solid var(--border-color);">
+                    <h3 style="color: var(--text-gray); font-size: 0.85rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Description du modèle</h3>
+                    <p id="detail-desc" style="line-height: 1.8; color: #cbd5e1; font-size: 1.05rem;">Chargement des informations...</p>
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                    <button onclick="window.location.href='produits.html'" class="btn-glow" style="flex: 1; padding: 18px 20px; font-size: 1.1rem; border-radius: 50px; margin-top: 0;">
+                        <i class="fas fa-shopping-basket"></i> Ajouter au panier
+                    </button>
+                    <button onclick="partagerProduit()" class="btn-glow" style="width: auto; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 18px 25px; font-size: 1.1rem; border-radius: 50px; margin-top: 0;" title="Partager à un ami">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+             </div>
+        </div>
+    </main>
+
+    <!-- SECTION PRODUITS SIMILAIRES -->
+    <section class="similar-section" style="width: 90%; max-width: 1000px; margin-bottom: 50px;">
+        <h2 style="color: var(--text-white); margin-bottom: 25px; font-size: 1.5rem; border-left: 4px solid var(--primary-blue); padding-left: 15px;">Vous aimerez <span style="color: var(--primary-blue);">aussi</span></h2>
+        <div class="products-grid" id="similar-grid"></div>
+    </section>
+
+    <!-- SECTION COMMENTAIRES -->
+    <section class="comments-section" style="width: 90%; max-width: 1000px; margin-bottom: 50px;">
+        <h2 style="color: var(--text-white); margin-bottom: 25px; font-size: 1.5rem; border-left: 4px solid var(--primary-blue); padding-left: 15px;">Avis <span>Clients</span></h2>
+        
+        <!-- Formulaire d'ajout -->
+        <div style="background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid var(--border-color); margin-bottom: 30px;">
+            <input type="text" id="comment-name" placeholder="Votre Nom" style="width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-white); padding: 12px; border-radius: 10px; margin-bottom: 15px;">
+            <textarea id="comment-text" placeholder="Partagez votre expérience avec ce produit..." style="width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-white); padding: 12px; border-radius: 10px; min-height: 80px; resize: vertical; margin-bottom: 15px;"></textarea>
+            <button onclick="ajouterCommentaire()" class="btn-glow" style="width: auto; padding: 12px 30px; margin-top: 0;"><i class="fas fa-paper-plane"></i> Publier l'avis</button>
+        </div>
+
+        <!-- Liste des commentaires -->
+        <div id="comments-list" style="display: flex; flex-direction: column; gap: 15px;"></div>
+    </section>
+
+    <footer class="login-footer-main">
+        <p>&copy; 2026 DAR! Mizan. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // --- GESTION AVANCÉE DU THÈME (V5.3) ---
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeIcon(isLight);
+        }
+
+        function updateThemeIcon(isLight) {
+            const themeIcon = document.querySelector('.theme-btn i');
+            if(themeIcon) themeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const isLight = savedTheme ? savedTheme === 'light' : !window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (isLight) document.body.classList.add('light-mode');
+            updateThemeIcon(isLight);
+        }
+        initializeTheme();
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. Récupérer le produit stocké dans la mémoire
+            const productData = localStorage.getItem('selectedProduct');
+            if (!productData) {
+                window.location.href = "produits.html";
+                return;
+            }
+
+            const p = JSON.parse(productData);
+
+            // 2. Remplir la page avec les infos
+            document.getElementById('detail-nom').innerText = p.nom;
+            document.getElementById('detail-price').innerText = p.prix.toFixed(2) + " €";
+            document.getElementById('detail-desc').innerText = p.desc || "Ce modèle allie performance et style. Conçu avec les dernières technologies pour un confort optimal au quotidien ou sur la piste.";
+            
+            const img = document.getElementById('detail-img');
+            img.src = p.img;
+            img.onerror = function() { this.src = 'iimage/nikezoompegaus42.jpeg'; };
+
+            // Gestion du Badge (Couleur et Texte)
+            const badge = document.getElementById('detail-badge');
+            badge.innerText = p.badgeText || "PRODUIT";
+            
+            if(p.badgeClass) {
+                if(p.badgeClass.includes('red')) badge.style.cssText = "color: #ff4d4d; background: rgba(255, 77, 77, 0.1);";
+                if(p.badgeClass.includes('orange')) badge.style.cssText = "color: #ffa502; background: rgba(255, 165, 2, 0.1);";
+                if(p.badgeClass.includes('green')) badge.style.cssText = "color: #2ed573; background: rgba(46, 213, 115, 0.1);";
+                if(p.badgeClass.includes('purple')) badge.style.cssText = "color: #a29bfe; background: rgba(162, 155, 254, 0.1);";
+            }
+
+            // 3. Charger les produits similaires
+            loadSimilarProducts(p.nom);
+
+            // 4. Charger la note existante
+            chargerNote(p.nom);
+
+            // 5. Charger les commentaires
+            chargerCommentaires(p.nom);
+
+            // 6. Initialiser l'affichage des étoiles pour qu'elles soient visibles au chargement
+            updateStarsVisual(noteActuelle);
+        });
+        // Gestion du rétrécissement du header au scroll (V5.4)
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header-pro');
+            if (window.scrollY > 50) { // Se déclenche après 50px de scroll
+                header.classList.add('shrink');
+            } else {
+                header.classList.remove('shrink');
+            }
+        });
+
+
+
+
+
+
+
+        function loadSimilarProducts(currentName) {
+            // Liste des produits "en dur" (copie de produits.html pour la démo)
+            const defaultProducts = [
+                { nom: 'Nike Air Zoom Pegasus 42', prix: 129.99, img: 'iimage/nikezoompegaus42.jpeg', badgeClass: 'card-red', badgeText: 'NOUVEAU' },
+                { nom: 'Nike Air Zoom Fly 6', prix: 110.00, img: 'iimage/nike.zoomfly6.webp', badgeClass: 'card-orange', badgeText: 'PROMO' },
+                { nom: 'Nike Air Zoom Vomero 5', prix: 129.00, img: 'iimage/vomero5.jpeg', badgeClass: 'card-green', badgeText: 'COLLECTION' },
+                { nom: 'Nike Air Zoom Alphafly 3', prix: 129.80, img: 'iimage/alphaly3.jpeg', badgeClass: 'card-purple', badgeText: 'LIMITED' },
+                { nom: 'Nike Air Zoom Structure 26', prix: 100.00, img: 'iimage/zoomstructure26.jpeg', badgeClass: 'card-red', badgeText: 'NOUVEAU' },
+                { nom: 'Nike Air Zoom Vomero 18', prix: 120.89, img: 'iimage/nikezoomvomero18.jpeg', badgeClass: 'card-orange', badgeText: 'PROMO' },
+                { nom: 'Nike Air Zoom Spiridon', prix: 90.00, img: 'iimage/spiridoncage 2.jpeg', badgeClass: 'card-green', badgeText: 'COLLECTION' },
+                { nom: 'Nike Air Zoom Tempo%', prix: 100.50, img: 'iimage/tempo.jpeg', badgeClass: 'card-purple', badgeText: 'LIMITED' }
+            ];
+
+            // Produits dynamiques (Admin)
+            const storedProducts = JSON.parse(localStorage.getItem('mizan_products') || '[]');
+            
+            // Fusion
+            const allProducts = [...defaultProducts, ...storedProducts];
+
+            // Filtrer (Exclure le produit actuel)
+            const similar = allProducts.filter(p => p.nom !== currentName);
+
+            // Mélanger aléatoirement
+            similar.sort(() => 0.5 - Math.random());
+
+            // Prendre les 4 premiers
+            const selection = similar.slice(0, 4);
+
+            // Affichage
+            const grid = document.getElementById('similar-grid');
+            grid.innerHTML = "";
+
+            selection.forEach(p => {
+                const article = document.createElement('article');
+                article.className = `card ${p.badgeClass}`;
+                article.innerHTML = `
+                    <span class="badge">${p.badgeText}</span>
+                    <div class="img-container" onclick="voirDetails('${p.nom.replace(/'/g, "\\'")}', ${p.prix}, '${p.img}', '${p.badgeClass}', '${p.badgeText}', '${(p.desc || "").replace(/'/g, "\\'")}')" style="cursor: pointer;">
+                        <img src="${p.img}" alt="${p.nom}" loading="lazy" decoding="async" onerror="this.src='iimage/nikezoompegaus42.jpeg'">
+                    </div>
+                    <div class="info">
+                        <h3 style="font-size: 1rem;">${p.nom}</h3>
+                        <div class="card-footer">
+                            <p class="price" style="font-size: 1.2rem;">${p.prix.toFixed(2)} €</p>
+                            <button class="add-btn" style="width:35px; height:35px; font-size:1rem;" onclick="window.location.href='produits.html'"><i class="fas fa-shopping-basket"></i></button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(article);
+            });
+        }
+
+        // Fonction pour recharger la page avec un nouveau produit
+        window.voirDetails = function(nom, prix, img, badgeClass, badgeText, desc) {
+            const product = { nom, prix, img, badgeClass, badgeText, desc };
+            localStorage.setItem('selectedProduct', JSON.stringify(product));
+            window.scrollTo(0, 0);
+            window.location.reload();
+        };
+
+        // --- SYSTÈME DE NOTATION ---
+        let noteActuelle = 0;
+
+        function chargerNote(nomProduit) {
+            const savedRating = localStorage.getItem('rating_' + nomProduit);
+            if (savedRating) {
+                noteActuelle = parseInt(savedRating, 10);
+                updateStarsVisual(noteActuelle);
+                document.getElementById('rating-text').innerText = "(" + noteActuelle + "/5 - Merci !)";
+                document.getElementById('rating-text').style.color = "#38bdf8";
+            }
+        }
+
+        function survolEtoile(n) {
+            updateStarsVisual(n);
+        }
+
+        function resetStars() {
+            updateStarsVisual(noteActuelle);
+        }
+
+        function noter(n) {
+            noteActuelle = n;
+            const p = JSON.parse(localStorage.getItem('selectedProduct'));
+            localStorage.setItem('rating_' + p.nom, n);
+            
+            document.getElementById('rating-text').innerText = "Note enregistrée !";
+            document.getElementById('rating-text').style.color = "#2ed573";
+
+            updateStarsVisual(n);
+        }
+
+        function updateStarsVisual(n) {
+            const stars = document.querySelectorAll('#star-container i');
+            // On récupère la couleur grise du thème actuel pour les étoiles vides
+            const grayColor = getComputedStyle(document.body).getPropertyValue('--text-gray').trim();
+
+            stars.forEach((star, index) => {
+                if (index < n) {
+                    star.classList.remove('far'); // Etoile vide
+                    star.classList.add('fas');    // Etoile pleine
+                    star.style.color = "#fbbf24"; // Jaune or
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                    star.style.color = grayColor; // On applique la couleur du thème
+                }
+            });
+        }
+
+        // --- FONCTION PARTAGE (V5.1) ---
+        function partagerProduit() {
+            const nom = document.getElementById('detail-nom').innerText;
+            const prix = document.getElementById('detail-price').innerText;
+            const shareData = {
+                title: 'DAR! Mizan - ' + nom,
+                text: `Regarde cette paire incroyable : ${nom} à ${prix} !`,
+                url: window.location.href
+            };
+
+            // Utilise l'API de partage native (Mobile) ou copie le lien (PC)
+            if (navigator.share) { navigator.share(shareData); }
+            else { navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`); alert("Lien copié ! Envoie-le à ton ami."); }
+        }
+
+        // --- SYSTÈME DE COMMENTAIRES ---
+        function chargerCommentaires(nomProduit) {
+            const list = document.getElementById('comments-list');
+            const comments = JSON.parse(localStorage.getItem('comments_' + nomProduit) || '[]');
+            
+            if(comments.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-gray); font-style: italic;">Aucun avis pour le moment. Soyez le premier !</p>';
+                return;
+            }
+
+            list.innerHTML = comments.map(c => `
+                <div style="background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--border-color);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <strong style="color: var(--text-white);">${c.user}</strong>
+                        <span style="color: var(--text-gray); font-size: 0.85rem;">${c.date}</span>
+                    </div>
+                    <p style="color: var(--text-gray); margin: 0; line-height: 1.6;">${c.text}</p>
+                </div>
+            `).join('');
+        }
+
+        function ajouterCommentaire() {
+            const p = JSON.parse(localStorage.getItem('selectedProduct'));
+            const nameInput = document.getElementById('comment-name');
+            const textInput = document.getElementById('comment-text');
+            
+            if(!nameInput.value.trim() || !textInput.value.trim()) {
+                alert("Veuillez remplir tous les champs !");
+                return;
+            }
+
+            const newComment = { user: nameInput.value, text: textInput.value, date: new Date().toLocaleDateString('fr-FR') };
+            const comments = JSON.parse(localStorage.getItem('comments_' + p.nom) || '[]');
+            comments.unshift(newComment); // Ajoute au début de la liste
+            localStorage.setItem('comments_' + p.nom, JSON.stringify(comments));
+
+            nameInput.value = ""; textInput.value = ""; // Vide le formulaire
+            chargerCommentaires(p.nom); // Rafraîchit l'affichage
+        }
+    </script>
+</body>
+</html>

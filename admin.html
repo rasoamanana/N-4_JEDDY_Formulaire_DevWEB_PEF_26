@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - DAR! Mizan</title>
+    <link rel="icon" href="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="boutique.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+
+        /* --- TOAST NOTIFICATIONS (V4.5) --- */
+        #toast-container {
+            position: fixed;
+            top: 100px; /* Juste en dessous du header */
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none; /* Permet de cliquer à travers le conteneur vide */
+        }
+
+        .toast {
+            background: var(--card-bg);
+            color: var(--text-white);
+            padding: 16px 25px;
+            border-radius: 12px;
+            border-left: 5px solid #38bdf8;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 300px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOutToast 0.4s ease 3.6s forwards;
+            pointer-events: auto;
+        }
+        .toast.success { border-left-color: #2ed573; } .toast.success i { color: #2ed573; }
+        .toast.error { border-left-color: #ef4444; } .toast.error i { color: #ef4444; }
+        @keyframes slideInToast { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOutToast { to { opacity: 0; transform: translateX(100%); } }
+    </style>
+</head>
+<body class="body-login">
+
+    <header class="header-pro">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="icon/vecteezy_black-silhouette-of-a-running-shoe-with-flames-and-lightning_70595360.jpg" alt="Logo" class="logo-img">
+                DAR! <span>Admin</span>
+            </div>
+            <div class="nav-right-group">
+                <ul class="nav-links">
+                    <li><a href="produits.html">Retour Boutique</a></li>
+                    <li><a href="#" onclick="logoutAdmin()" style="color: #ef4444; font-weight: bold;">Déconnexion</a></li>
+                </ul>
+                <button onclick="toggleTheme()" class="theme-btn"><i class="fas fa-sun"></i></button>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CONTENEUR DES NOTIFICATIONS -->
+    <div id="toast-container"></div>
+
+    <!-- INTERFACE DE GESTION (Protégée) -->
+    <!-- On laisse display:none pour éviter le "flash" avant la vérification JS -->
+    <div id="admin-interface" class="form-container" style="display: none;">
+        <div class="infos-form">
+            <!-- TABLEAU DE BORD (STATS) -->
+            <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px;">
+                <div class="stat-card" style="background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--border-color); text-align: center;">
+                    <i class="fas fa-box-open" style="font-size: 2rem; color: #38bdf8; margin-bottom: 10px;"></i>
+                    <h3 style="margin: 0; color: var(--text-gray); font-size: 0.9rem; text-transform: uppercase;">Produits Ajoutés</h3>
+                    <p id="stat-count" style="font-size: 1.8rem; font-weight: bold; color: var(--text-white); margin: 5px 0 0;">0</p>
+                </div>
+                <div class="stat-card" style="background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--border-color); text-align: center;">
+                    <i class="fas fa-coins" style="font-size: 2rem; color: #2ed573; margin-bottom: 10px;"></i>
+                    <h3 style="margin: 0; color: var(--text-gray); font-size: 0.9rem; text-transform: uppercase;">Valeur Totale</h3>
+                    <p id="stat-value" style="font-size: 1.8rem; font-weight: bold; color: var(--text-white); margin: 5px 0 0;">0.00 €</p>
+                </div>
+                <div class="stat-card" style="background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--border-color); text-align: center;">
+                    <i class="fas fa-users" style="font-size: 2rem; color: #a29bfe; margin-bottom: 10px;"></i>
+                    <h3 style="margin: 0; color: var(--text-gray); font-size: 0.9rem; text-transform: uppercase;">Visiteurs Totaux</h3>
+                    <p id="stat-visitors" style="font-size: 1.8rem; font-weight: bold; color: var(--text-white); margin: 5px 0 0;">0</p>
+                </div>
+            </div>
+
+            <!-- GRAPHIQUE DES VENTES -->
+            <div class="chart-container" style="background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--border-color); margin-bottom: 30px;">
+                <h3 style="margin: 0 0 15px 0; color: var(--text-gray); font-size: 0.9rem; text-transform: uppercase;">Évolution des Ventes (6 derniers mois)</h3>
+                <canvas id="salesChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <h2>Ajouter un <span>Produit</span></h2>
+            
+            <form id="admin-form" onsubmit="ajouterProduit(event)">
+                <div class="input-box">
+                    <label>Nom du modèle</label>
+                    <input type="text" id="p-nom" placeholder="Ex: Nike Air Max..." required>
+                </div>
+
+                <div class="input-box">
+                    <label>Prix (€)</label>
+                    <input type="number" id="p-prix" step="0.01" placeholder="Ex: 129.99" required>
+                </div>
+
+                <div class="input-box">
+                    <label>Description</label>
+                    <textarea id="p-desc" placeholder="Détails du produit (matière, confort...)" style="width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-white); resize: vertical; min-height: 80px;"></textarea>
+                </div>
+
+                <div class="input-box">
+                    <label>Image du produit (Fichier PC)</label>
+                    <!-- Champ type="file" pour choisir un fichier -->
+                    <input type="file" id="p-img-file" accept="image/*" required onchange="afficherApercu(event)" style="padding: 10px; background: var(--input-bg); color: var(--text-white); border: 1px solid var(--border-color); border-radius: 8px; width: 100%;">
+                    <small style="color:#94a3b8; display:block; margin-top:5px; font-size: 0.8em;">⚠️ Attention : Choisissez une petite image (< 500 Ko) pour ne pas saturer la mémoire.</small>
+                    
+                    <!-- Zone d'aperçu de l'image -->
+                    <div id="preview-box" style="display: none; margin-top: 15px; text-align: center; background: var(--card-bg); padding: 10px; border-radius: 10px; border: 1px solid var(--border-color);">
+                        <img id="img-preview" src="" alt="Aperçu" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    </div>
+                </div>
+
+                <div class="input-box">
+                    <label>Type de Badge</label>
+                    <select id="p-badge">
+                        <option value="card-red">Nouveau (Rouge)</option>
+                        <option value="card-orange">Promo (Orange)</option>
+                        <option value="card-green">Collection (Vert)</option>
+                        <option value="card-purple">Limited (Violet)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit"><i class="fas fa-plus-circle"></i> Publier le produit</button>
+            </form>
+
+            <div class="separateur">Vos Produits Ajoutés</div>
+            <div class="input-box" style="margin-bottom: 20px;">
+                <input type="text" id="search-admin" placeholder="🔍 Rechercher dans la liste..." onkeyup="rechercherProduits()" style="background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-white); padding: 12px; border-radius: 8px; width: 100%;">
+            </div>
+
+            <div id="admin-product-list">
+                <!-- La liste s'affichera ici via JS -->
+            </div>
+            <div id="pagination-controls"></div>
+
+            <div class="separateur">Zone de Danger</div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="resetProduits()" class="btn-glow" style="background:#ef4444; color:white; font-size: 0.9rem; padding: 10px; flex: 1;"><i class="fas fa-bomb"></i> Reset Produits</button>
+                <button onclick="resetVisiteurs()" class="btn-glow" style="background:#f97316; color:white; font-size: 0.9rem; padding: 10px; flex: 1;"><i class="fas fa-user-slash"></i> Reset Visiteurs</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION PAGINATION ---
+        let currentPage = 1;
+        const itemsPerPage = 5; // Nombre de produits par page
+        let salesChartInstance = null; // Variable pour manipuler le graphique
+
+        // --- SÉCURITÉ PROFESSIONNELLE ---
+        // On vérifie si l'utilisateur est connecté en tant qu'admin
+        const currentUser = localStorage.getItem('currentUser');
+        
+        // On initialise le thème pour tout le monde afin d'éviter un flash blanc en cas de redirection
+        initializeTheme(); 
+
+        if (currentUser !== 'Jeddy') {
+            window.location.href = "connexion.html"; // Pas admin ? Dehors !
+        } else {
+            document.getElementById('admin-interface').style.display = 'flex'; // C'est l'admin, on affiche tout
+            afficherProduitsAdmin(); // On charge la liste au démarrage
+            initChart(); // On initialise le graphique
+        }
+
+        // --- GESTION AVANCÉE DU THÈME (V5.3) ---
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeIcon(isLight);
+
+            // Recrée le graphique pour mettre à jour les couleurs des axes/légendes
+            if(salesChartInstance) { salesChartInstance.destroy(); }
+            initChart();
+        }
+
+        function updateThemeIcon(isLight) {
+            const themeIcon = document.querySelector('.theme-btn i');
+            if(themeIcon) themeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            // 1. Priorité au choix de l'utilisateur, 2. Sinon, préférence système
+            const isLight = savedTheme ? savedTheme === 'light' : (window.matchMedia && !window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            if (isLight) document.body.classList.add('light-mode');
+            updateThemeIcon(isLight);
+        }
+
+        // Fonction pour afficher l'aperçu instantané
+        function afficherApercu(event) {
+            const file = event.target.files[0];
+            const previewBox = document.getElementById('preview-box');
+            const imgPreview = document.getElementById('img-preview');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imgPreview.src = e.target.result;
+                    previewBox.style.display = 'block'; // On affiche la boîte
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function ajouterProduit(e) {
+            e.preventDefault();
+            
+            const nom = document.getElementById('p-nom').value;
+            const prix = parseFloat(document.getElementById('p-prix').value);
+            const desc = document.getElementById('p-desc').value;
+            const badgeClass = document.getElementById('p-badge').value;
+            const fileInput = document.getElementById('p-img-file');
+            
+            // 1. Récupération du fichier
+            const file = fileInput.files[0];
+            if (!file) return; // Sécurité si vide
+
+            // 2. Vérification de la taille (Max 500 Ko conseillé pour localStorage)
+            if (file.size > 500 * 1024) {
+                showToast("L'image est trop lourde (> 500Ko) !", "error");
+                return;
+            }
+
+            // 3. Lecture du fichier (Conversion en texte Base64)
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                const imgData = event.target.result; // L'image convertie en code
+
+                let badgeText = "NOUVEAU";
+                if(badgeClass.includes('orange')) badgeText = "PROMO";
+                if(badgeClass.includes('green')) badgeText = "COLLECTION";
+                if(badgeClass.includes('purple')) badgeText = "LIMITED";
+
+                const nouveauProduit = { nom, prix, desc, img: imgData, badgeClass, badgeText };
+                const produits = JSON.parse(localStorage.getItem('mizan_products') || '[]');
+                produits.push(nouveauProduit);
+                localStorage.setItem('mizan_products', JSON.stringify(produits));
+
+                // MISE À JOUR DYNAMIQUE DU GRAPHIQUE
+                if (salesChartInstance) {
+                    // On ajoute le prix du nouveau produit au dernier mois (Juin) pour simuler l'activité
+                    const dernierMoisIndex = salesChartInstance.data.datasets[0].data.length - 1;
+                    salesChartInstance.data.datasets[0].data[dernierMoisIndex] += prix;
+                    salesChartInstance.update(); // Rafraîchit le visuel instantanément
+                    
+                    // SAUVEGARDE PERSISTANTE
+                    localStorage.setItem('mizan_sales_data', JSON.stringify(salesChartInstance.data.datasets[0].data));
+                }
+
+                jouerSonSucces(); // Notification sonore
+                showToast("Produit ajouté avec succès !", "success");
+                document.getElementById('admin-form').reset();
+                document.getElementById('preview-box').style.display = 'none'; // On cache l'aperçu après ajout
+                afficherProduitsAdmin(); // Mise à jour immédiate de la liste
+            };
+            
+            reader.readAsDataURL(file); // Lance la lecture
+        }
+
+        function rechercherProduits() {
+            currentPage = 1; // Reset à la page 1 quand on cherche
+            afficherProduitsAdmin();
+        }
+
+        function changerPage(delta) {
+            currentPage += delta;
+            afficherProduitsAdmin();
+        }
+
+        // Fonction pour afficher la liste des produits avec bouton supprimer
+        function afficherProduitsAdmin() {
+            const produits = JSON.parse(localStorage.getItem('mizan_products') || '[]');
+            const container = document.getElementById('admin-product-list');
+            const paginationContainer = document.getElementById('pagination-controls');
+            const searchTerm = document.getElementById('search-admin').value.toLowerCase();
+            
+            // MISE À JOUR DU DASHBOARD (Calculs automatiques)
+            const totalValue = produits.reduce((sum, p) => sum + p.prix, 0);
+            document.getElementById('stat-count').innerText = produits.length;
+            document.getElementById('stat-value').innerText = totalValue.toFixed(2) + " €";
+
+            // MISE À JOUR DES VISITEURS
+            const totalVisits = localStorage.getItem('mizan_total_visits') || '0';
+            document.getElementById('stat-visitors').innerText = totalVisits;
+
+            // 1. Préparation des données (avec index original pour modif/suppression)
+            const indexedProduits = produits.map((p, index) => ({ ...p, originalIndex: index }));
+
+            // 2. Filtrage (Recherche)
+            const filteredProduits = indexedProduits.filter(p => p.nom.toLowerCase().includes(searchTerm));
+
+            if (filteredProduits.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#94a3b8; font-style:italic;">Aucun produit trouvé.</p>';
+                paginationContainer.innerHTML = '';
+                return;
+            }
+
+            // 3. Pagination
+            const totalPages = Math.ceil(filteredProduits.length / itemsPerPage);
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const paginatedItems = filteredProduits.slice(startIndex, startIndex + itemsPerPage);
+
+            // 4. Affichage
+            let html = '<ul style="list-style:none; padding:0; margin:0;">';
+            paginatedItems.forEach((p) => {
+                html += `
+                    <li style="background: var(--card-bg); padding: 12px; margin-bottom: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color);">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <img src="${p.img}" loading="lazy" decoding="async" style="width:50px; height:50px; object-fit:cover; border-radius:8px; border: 1px solid var(--border-color);">
+                            <div>
+                                <strong style="color:var(--text-white); display:block; font-size: 0.95rem;">${p.nom}</strong>
+                                <span style="color:var(--primary); font-weight:bold; font-size:0.85rem;">${p.prix} €</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="modifierProduit(${p.originalIndex})" style="background:rgba(56, 189, 248, 0.2); color:#38bdf8; border:1px solid #38bdf8; width:35px; height:35px; border-radius:8px; cursor:pointer; transition:0.3s; display:flex; align-items:center; justify-content:center;" title="Modifier">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="supprimerProduitSpecifique(${p.originalIndex})" style="background:rgba(239, 68, 68, 0.2); color:#ef4444; border:1px solid #ef4444; width:35px; height:35px; border-radius:8px; cursor:pointer; transition:0.3s; display:flex; align-items:center; justify-content:center;" title="Supprimer">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+            container.innerHTML = html;
+            
+            // 5. Contrôles Pagination
+            if (totalPages > 1) {
+                paginationContainer.innerHTML = `
+                    <div style="display:flex; justify-content:center; gap:15px; margin-top:20px; align-items:center;">
+                        <button onclick="changerPage(-1)" ${currentPage === 1 ? 'disabled' : ''} class="btn-glow" style="width:auto; padding:8px 15px; margin:0; ${currentPage === 1 ? 'opacity:0.5; cursor:not-allowed;' : ''}"><i class="fas fa-chevron-left"></i></button>
+                        <span style="color:var(--text-gray); font-weight:bold; font-size:0.9rem;">Page <span style="color:var(--text-white);">${currentPage}</span> / ${totalPages}</span>
+                        <button onclick="changerPage(1)" ${currentPage === totalPages ? 'disabled' : ''} class="btn-glow" style="width:auto; padding:8px 15px; margin:0; ${currentPage === totalPages ? 'opacity:0.5; cursor:not-allowed;' : ''}"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                `;
+            } else {
+                paginationContainer.innerHTML = '';
+            }
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            // Couleurs dynamiques selon le thème
+            const isLight = document.body.classList.contains('light-mode');
+            const textColor = isLight ? '#64748b' : '#94a3b8';
+            
+            // RECUPERATION DES DONNEES SAUVEGARDEES
+            const savedData = JSON.parse(localStorage.getItem('mizan_sales_data'));
+            const chartData = savedData || [1200, 1900, 1500, 2800, 2200, 3500]; // Défaut si vide
+
+            // Données fictives pour la démo
+            salesChartInstance = new Chart(ctx, { // On stocke le graphique dans la variable
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+                    datasets: [{
+                        label: 'Ventes (€)',
+                        data: chartData,
+                        borderColor: '#38bdf8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4, // Courbe arrondie
+                        fill: true,
+                        pointBackgroundColor: '#38bdf8'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: textColor } }
+                    },
+                    scales: {
+                        y: { 
+                            grid: { color: isLight ? '#e2e8f0' : '#334155' },
+                            ticks: { color: textColor }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: textColor }
+                        }
+                    }
+                }
+            });
+        }
+
+        function modifierProduit(index) {
+            const produits = JSON.parse(localStorage.getItem('mizan_products') || '[]');
+            const produit = produits[index];
+            
+            // 1. Modifier le Nom
+            const nouveauNom = prompt("Modifier le nom du modèle :", produit.nom);
+            if (nouveauNom === null) return; // Annulé
+
+            // 2. Modifier la Description
+            const nouvelleDesc = prompt("Modifier la description :", produit.desc || "");
+            if (nouvelleDesc === null) return; // Annulé
+
+            // 3. Modifier le Prix
+            const nouveauPrix = prompt(`Nouveau prix pour "${nouveauNom}" :`, produit.prix);
+            if (nouveauPrix === null) return; // Annulé
+            
+            const prixFloat = parseFloat(nouveauPrix);
+            
+            if (!isNaN(prixFloat) && prixFloat >= 0 && nouveauNom.trim() !== "") {
+                produit.nom = nouveauNom.trim();
+                produit.desc = nouvelleDesc.trim();
+                produit.prix = prixFloat;
+                produits[index] = produit; // Mise à jour dans le tableau
+                localStorage.setItem('mizan_products', JSON.stringify(produits));
+                afficherProduitsAdmin(); // Rafraîchissement de l'affichage et des stats
+            } else {
+                showToast("Modification invalide !", "error");
+            }
+        }
+
+        function supprimerProduitSpecifique(index) {
+            if(confirm("Voulez-vous vraiment supprimer ce produit ?")) {
+                const produits = JSON.parse(localStorage.getItem('mizan_products') || '[]');
+                produits.splice(index, 1); // On retire l'élément à l'index donné
+                localStorage.setItem('mizan_products', JSON.stringify(produits));
+                afficherProduitsAdmin(); // On rafraîchit la liste
+            }
+        }
+
+        function resetProduits() {
+            if(confirm("⚠️ ATTENTION : Cela va supprimer TOUS les produits ajoutés. Continuer ?")) {
+                localStorage.removeItem('mizan_products');
+                localStorage.removeItem('mizan_sales_data'); // On reset aussi le graphique
+                // Note : On ne supprime pas 'mizan_total_visits' pour garder l'historique des visiteurs
+                afficherProduitsAdmin();
+                
+                // On recharge le graphique pour remettre les valeurs par défaut visuellement
+                if(salesChartInstance) {
+                    salesChartInstance.data.datasets[0].data = [1200, 1900, 1500, 2800, 2200, 3500];
+                    salesChartInstance.update();
+                }
+
+                showToast("Tout a été réinitialisé.", "success");
+            }
+        }
+
+        function resetVisiteurs() {
+            if(confirm("Voulez-vous vraiment remettre le compteur de visiteurs à zéro ?")) {
+                localStorage.setItem('mizan_total_visits', '0');
+                document.getElementById('stat-visitors').innerText = '0';
+                showToast("Compteur de visiteurs réinitialisé.", "success");
+            }
+        }
+
+        function logoutAdmin() {
+            if(confirm("Se déconnecter de l'administration ?")) {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('remembered_email'); // On oublie l'email
+                window.location.href = "connexion.html";
+            }
+        }
+
+        // --- SYSTÈME DE NOTIFICATIONS (TOASTS) ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+            
+            toast.innerHTML = `<i class="fas ${icon}" style="font-size: 1.3rem;"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            // Suppression automatique après 4 secondes (temps de l'animation fadeOut)
+            setTimeout(() => { toast.remove(); }, 4000);
+        }
+
+        // Fonction pour générer un son de succès (Sans fichier externe)
+        function jouerSonSucces() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            // Création d'un son type "Ding" (montée rapide en fréquence)
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // Note Do (C5)
+            oscillator.frequency.exponentialRampToValueAtTime(1046.5, audioCtx.currentTime + 0.1); // Monte vers Do (C6)
+            
+            // Gestion du volume (Fade out)
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.5);
+        }
+
+        // GESTION DU MENU BURGER
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const menuItems = document.querySelectorAll('.nav-links a, .nav-links button'); // Tous les éléments cliquables du menu
+
+        if(hamburger) {
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = hamburger.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+
+            // Fermeture automatique quand on clique sur un lien
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    const icon = hamburger.querySelector('i');
+                    if(icon) {
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
+                });
+            });
+        }
+        // Gestion du rétrécissement du header au scroll (V5.4)
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header-pro');
+            if (window.scrollY > 50) { // Se déclenche après 50px de scroll
+                header.classList.add('shrink');
+            } else {
+                header.classList.remove('shrink');
+            }
+        });
+
+
+
+
+
+
+    </script>
+</body>
+</html>

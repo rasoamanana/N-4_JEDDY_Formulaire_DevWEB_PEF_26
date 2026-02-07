@@ -17,6 +17,7 @@
             <div class="nav-right-group">
                 <ul class="nav-links">
                     <li><a href="index.html">Accueil</a></li>
+                    <li><button onclick="toggleTheme()" class="btn-glow" style="padding: 8px 15px; margin: 0; width: auto; background: transparent; border: 1px solid var(--primary-blue); color: var(--primary-blue);"><i class="fas fa-sun"></i></button></li>
                     <li><a href="produits.html">Produits</a></li>
                 </ul>
                 <a href="connexion.html" class="btn-login">Login</a>
@@ -55,5 +56,37 @@
             <a href="contact.html">Contact</a>
         </div>
     </footer>
+    <script>
+        // --- GESTION AVANCÉE DU THÈME (V5.3) ---
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeIcon(isLight);
+        }
+
+        function updateThemeIcon(isLight) {
+            const themeIcon = document.querySelector('button[onclick="toggleTheme()"] i');
+            if(themeIcon) themeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const isLight = savedTheme ? savedTheme === 'light' : !window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (isLight) document.body.classList.add('light-mode');
+            updateThemeIcon(isLight);
+        }
+        initializeTheme();
+
+        // Gestion du rétrécissement du header au scroll (V5.4)
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header-pro');
+            if (window.scrollY > 50) { // Se déclenche après 50px de scroll
+                header.classList.add('shrink');
+            } else {
+                header.classList.remove('shrink');
+            }
+        });
+    </script>
 </body>
 </html>

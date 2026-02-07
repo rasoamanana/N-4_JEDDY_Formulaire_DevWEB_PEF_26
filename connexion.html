@@ -21,6 +21,7 @@
                     <li><a href="produits.html">Produits</a></li>
                     <li><a href="connexion.html" class="btn-login">Se connecter</a></li>
                 </ul>
+                <button onclick="toggleTheme()" class="theme-btn"><i class="fas fa-sun"></i></button>
                 <div class="hamburger">
                     <i class="fas fa-bars"></i>
                 </div>
@@ -36,27 +37,26 @@
 
                 <form>
                     <div class="input-box">
-                        <label>Nom d'utilisateur</label>
-                        <input type="text" id="login-user" placeholder="Entrez votre nom" required>
+                        <label>Adresse e-mail</label>
+                        <input type="email" id="login-email" placeholder="votre@email.com" required>
                     </div>
                     <div class="input-box">
                         <label>Mot de passe</label>
                         <input type="password" id="login-pass" placeholder="••••••••" required>
                     </div>
-                
+
+                    <!-- SE SOUVENIR DE MOI (V6.2) -->
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="remember-me"> Se souvenir de moi
+                        </label>
+                        <a href="#">Mot de passe oublié ?</a>
+                    </div>
+
                     <button type="submit" class="btn-glow">Connexion</button>
                 </form>
 
-                <div class="separateur">OU CONTINUER AVEC</div>
-
-                <div class="social-icons">
-                    <a href="#" onclick="socialLogin('Google')"><img src="icon/google.png" alt="Google"></a>
-                    <a href="#" onclick="socialLogin('Apple')"><i class="fab fa-apple" style="font-size: 24px; color: white;"></i></a>
-                    <a href="#" onclick="socialLogin('Facebook')"><img src="icon/facebook (1).png" alt="Facebook"></a>
-                </div>
-
                 <div class="login-footer">
-                    <p>Mot de passe oublié ? <a href="#">Cliquer ici</a></p>
                     <p>Pas encore de compte ? <a href="infos.html">S'inscrire ici</a></p>
                 </div>
             </div>
@@ -74,10 +74,40 @@
     </footer>
 
     <script>
+        // GESTION DU THÈME
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            const btn = document.querySelector('.theme-btn i');
+            if(btn) btn.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        if(localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }
+
         document.addEventListener("DOMContentLoaded", function() {
+            // Icône thème
+            if(localStorage.getItem('theme') === 'light') {
+                const btn = document.querySelector('.theme-btn i');
+                if(btn) btn.className = 'fas fa-moon';
+            }
+
+            // --- SE SOUVENIR DE MOI (V6.2) ---
+            // Pré-remplir l'email si il a été sauvegardé
+            const savedEmail = localStorage.getItem('remembered_email');
+            if (savedEmail) {
+                document.getElementById('login-email').value = savedEmail;
+                document.getElementById('remember-me').checked = true;
+            }
+
             // VÉRIFICATION SI DÉJÀ CONNECTÉ
             const currentUser = localStorage.getItem('currentUser');
             
+            // SÉCURITÉ : Redirection immédiate si c'est l'admin
+            if (currentUser === 'Jeddy') {
+                window.location.href = "admin.html";
+                return;
+            }
+
             if (currentUser) {
                 // Si connecté, on remplace le contenu de la carte
                 const loginContent = document.querySelector('.login-content');
@@ -98,6 +128,7 @@
                 // Action du bouton déconnexion
                 document.getElementById('force-logout').addEventListener('click', function() {
                     localStorage.removeItem('currentUser');
+                    localStorage.removeItem('remembered_email'); // On oublie l'email
                     window.location.reload(); // Recharge la page pour réafficher le formulaire
                 });
 
@@ -107,24 +138,30 @@
                 if(form) {
                     form.addEventListener('submit', function(e) {
                         e.preventDefault();
-                        const userVal = document.getElementById('login-user').value;
-                        const passVal = document.getElementById('login-pass').value;
+                        const emailVal = document.getElementById('login-email').value.trim();
+                        const passVa
+                        // --- VÉRIFICATION ADMIN (Système Pro) ---
+                        // L'admin se connecte toujours avec son nom d'utilisateur spécial
+                        if (emailVal === 'Jeddy' && passVal === '190308') {
+                            localStorage.setItem('currentUser', 'Jeddy'); // On enregistre la session admin
+                            window.location.href = "admin.html"; // Redirection vers l'admin
+                            return;
+                        }
+
                         let users = JSON.parse(localStorage.getItem('users')) || [];
-                        let userFound = users.find(u => u.username === userVal && u.password === passVal);
+                        // On cherche l'utilisateur par email et mot de passe
+                        let userFound = users.find(u => u.email && u.email.toLowerCase() === emailVal.toLowerCase() && u.password === passVal);
 
                         if (userFound) {
-                            localStorage.setItem('currentUser', userVal);
-                            alert("Connexion réussie ! Bienvenue " + userVal);
+                            localStorage.setItem('currentUser', userFound.username);
+                            alert("Connexion réussie ! Bienvenue " + userFound.username);
                             window.location.href = "index.html";
-                        } else {
-                            alert("Nom d'utilisateur ou mot de passe incorrect.");
+                        } else {ct.");
                         }
-                    });
                 }
             }
 
-            // GESTION DU MENU BURGER (Reste actif dans tous les cas)
-            const hamburger = document.querySelector('.hamburger');
+            // GESTION DU MENU B
             const navLinks = document.querySelector('.nav-links');
 
             if(hamburger) {
@@ -134,20 +171,27 @@
                     icon.classList.toggle('fa-bars');
                     icon.classList.toggle('fa-times');
                 });
+
+                // Fermeture auto
+                document.querySelectorAll('.nav-links a, .nav-links button').forEach(item => {
+                    item.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        const icon = hamburger.querySelector('i');
+                        if(icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
+                    });
+                });
             }
         });
 
-        // FONCTION SOCIAL LOGIN (Globale)
-        function socialLogin(provider) {
-            // On simule un délai réseau pour faire "vrai"
-            alert("Redirection vers " + provider + " pour l'authentification...");
-            
-            setTimeout(() => {
-                localStorage.setItem('currentUser', "Utilisateur " + provider);
-                alert("Connexion réussie avec " + provider + " !");
-                window.location.href = "index.html";
-            }, 1000);
-        }
+        // Gestion du rétrécissement du header au scroll (V5.4)
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header-pro');
+            if (window.scrollY > 50) { // Se déclenche après 50px de scroll
+                header.classList.add('shrink');
+            } else {
+                header.classList.remove('shrink');
+            }
+        });
     </script>
 </body>
 </html>

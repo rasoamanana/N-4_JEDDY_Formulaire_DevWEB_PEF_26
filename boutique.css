@@ -201,7 +201,7 @@ nav ul li a:hover { color: var(--mizan-blue); }
     padding: 20px;
     border: 1px solid var(--border-color);
     position: relative;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; /* Animation fluide avec rebond */
     display: flex;
     flex-direction: column;
 }
@@ -228,11 +228,65 @@ nav ul li a:hover { color: var(--mizan-blue); }
     background: rgba(162, 155, 254, 0.1);
 }
 
+/* Bordures plus visibles et stylées en mode clair */
+body.light-mode .card.card-red { border-color: #ff4d4d; box-shadow: 0 5px 15px rgba(255, 77, 77, 0.1); }
+body.light-mode .card.card-orange { border-color: #ffa502; box-shadow: 0 5px 15px rgba(255, 165, 2, 0.1); }
+body.light-mode .card.card-green { border-color: #2ed573; box-shadow: 0 5px 15px rgba(46, 213, 115, 0.1); }
+body.light-mode .card.card-purple { border-color: #a29bfe; box-shadow: 0 5px 15px rgba(162, 155, 254, 0.1); }
+
 .card:hover { 
-    transform: translateY(-8px); 
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2); 
+    transform: translateY(-12px) scale(1.02); /* Monte plus haut et grossit légèrement */
+    box-shadow: 0 20px 40px rgba(56, 189, 248, 0.25); /* Lueur bleue diffuse */
     border-color: var(--primary-blue);
+    z-index: 10; /* Passe au-dessus des voisins */
 }
+
+/* --- SKELETON LOADER (V5.2) --- */
+.skeleton-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.skeleton {
+    background: #334155; /* Base color for skeleton shapes */
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    /* Shimmer animation */
+    animation: shimmer 1.5s infinite linear;
+    background-image: linear-gradient(90deg, #334155 0%, #475569 50%, #334155 100%);
+    background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Light mode skeleton */
+body.light-mode .skeleton {
+    background: #e2e8f0;
+    background-image: linear-gradient(90deg, #e2e8f0 0%, #f1f5f9 50%, #e2e8f0 100%);
+}
+
+.skeleton-img { height: 180px; border-radius: 15px; margin-top: 20px; }
+.skeleton-title { height: 20px; width: 70%; margin-top: 20px; }
+.skeleton-subtitle { height: 15px; width: 40%; margin-top: 8px; }
+
+.skeleton-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.skeleton-price { height: 30px; width: 50%; }
+.skeleton-btn { height: 45px; width: 45px; border-radius: 50%; }
+/* --- FIN SKELETON --- */
 
 .badge {
     display: inline-block;
@@ -252,9 +306,33 @@ nav ul li a:hover { color: var(--mizan-blue); }
     border-radius: 15px;
     padding: 20px;
     margin-top: 20px;
+    position: relative; /* Nécessaire pour contenir le reflet */
+    overflow: hidden;   /* Coupe le reflet quand il sort du cadre */
 }
 .img-container img { width: 100%; transition: transform 0.4s ease; }
 .card:hover .img-container img { transform: scale(1.05) rotate(-5deg); }
+
+/* Effet de brillance (Reflet lumineux) */
+.img-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%; /* Départ hors champ à gauche */
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-25deg); /* Inclinaison pour le dynamisme */
+    pointer-events: none;     /* Permet de cliquer à travers */
+    z-index: 2;
+}
+
+.card:hover .img-container::before {
+    animation: shine 0.75s; /* Durée de l'éclair */
+}
+
+@keyframes shine {
+    100% { left: 200%; } /* Fin hors champ à droite */
+}
 
 .info { margin-top: auto; padding-top: 20px; } /* Pousse le contenu vers le bas */
 .info h3 { font-size: 1.1rem; color: var(--text-white); margin: 0; font-weight: 700; }

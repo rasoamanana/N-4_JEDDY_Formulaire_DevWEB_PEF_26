@@ -23,6 +23,7 @@
                     <li><a href="produits.html" class="active">Produits</a></li>
                     <li><a href="connexion.html" class="btn-login">Se connecter</a></li>
                 </ul>
+                <button onclick="toggleTheme()" class="theme-btn"><i class="fas fa-sun"></i></button>
                 <div class="hamburger">
                     <i class="fas fa-bars"></i>
                 </div>
@@ -43,138 +44,26 @@
             </div>
         </div>
 
-        <div class="products-grid">
-
-            <article class="card card-red">
-                <span class="badge">NOUVEAU</span>
-                <div class="img-container">
-                    <img src="iimage/nikezoompegaus42.jpeg" alt="Nike Pegasus 42">
-                </div>
-                <div class="info">
-                    <h3>Nike Air Zoom <span>Pegaus 42</span></h3>
-                    <div class="card-footer">
-                        <p class="price">129.99 €</p>
-                        <button class="add-btn" onclick="ajouterAuPanier('Nike Pegasus 42', 129.99)">
-                            <i class="fas fa-shopping-basket"></i>
-                        </button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="card card-orange">
-                <span class="badge">PROMO</span>
-                <div class="img-container">
-                    <img src="iimage/nike.zoomfly6.webp" alt="Nike Zoom Fly 6">
-                </div>
-                <div class="info">
-                    <h3>Nike Air Zoom <span>fly 6</span></h3>
-                    <div class="card-footer">
-                        <p class="price">110.00 €</p>
-                        <button class="add-btn" onclick="ajouterAuPanier('Nike Zoom Fly 6', 110.00)">
-                            <i class="fas fa-shopping-basket"></i>
-                        </button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="card card-green">
-                <span class="badge">COLLECTION</span>
-                <div class="img-container">
-                    <img src="iimage/vomero5.jpeg" alt="Nike vomero 5">
-                </div>
-                <div class="info">
-                    <h3>Nike Air Zoom <span>Vomero 5</span></h3>
-                    <div class="card-footer">
-                        <p class="price">129.00 €</p>
-                        <button class="add-btn" onclick="ajouterAuPanier('Nike Vomero 5', 129.00)">
-                            <i class="fas fa-shopping-basket"></i>
-                        </button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="card card-purple">
-                <span class="badge">LIMITED</span>
-                <div class="img-container">
-                    <img src="iimage/alphaly3.jpeg" alt="Nike alphaly3">
-                </div>
-                <div class="info">
-                    <h3>Nike Air Zoom <span>Alphafly 3</span></h3>
-                    <div class="card-footer">
-                        <p class="price">129.80 €</p>
-                        <button class="add-btn" onclick="ajouterAuPanier('Nike Alphafly 3', 129.80)">
-                            <i class="fas fa-shopping-basket"></i>
-                        </button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="card card-red">
-                <span class="badge">NOUVEAU</span>
-                <div class="img-container">
-                    <img src="iimage/zoomstructure26.jpeg" alt="Nike 26">
-                </div>
-                <div class="info">
-                    <h3>Nike Air Zoom <span>Structure 26</span></h3>
-                    <div class="card-footer">
-                        <p class="price">100.00 €</p>
-                        <button class="add-btn" onclick="ajouterAuPanier('Nike Structure 26', 100.00)">
-                            <i class="fas fa-shopping-basket"></i>
-                        </button>
-                    </div>
-                </div>
-            </article>
-
-
-            <article class="card card-orange">
-                <span class="badge">PROMO</span>
-                <div class="img-container">
-                    <img src="iimage/nikezoomvomero18.jpeg" alt="Nike vomero 18">
-                </div>
-                <div class="info">
-                    <h3>Nike Air Zoom <span>Vomero 18</span></h3>
-                    <div class="card-footer">
-                        <p class="price">120.89 €</p>
-                        <button class="add-btn" onclick="ajouterAuPanier('Nike Vomero 18', 120.89)">
-                            <i class="fas fa-shopping-basket"></i>
-                        </button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="card card-green">
-                <span class="badge">COLLECTION</span>
-                <div class="img-container">
-                    <img src="iimage/spiridoncage 2.jpeg" alt="Nike spiridoncage 2">
-                </div>
-                <div class="info">
-                    <h3>Nike Air Zoom <span>spiridoncage 2</span></h3>
-                    <div class="card-footer">
-                        <p class="price">90.00 €</p>
-                        <button class="add-btn" onclick="ajouterAuPanier('Nike Spiridon', 90.00)">
-                            <i class="fas fa-shopping-basket"></i>
-                        </button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="card card-purple">
-                <span class="badge">LIMITED</span>
-                <div class="img-container">
-                    <img src="iimage/tempo%.jpeg" alt="Nike Tempo%">
-                </div>
-                <div class="info">
-                    <h3>Nike Air Zoom <span>tempo%</span></h3>
-                    <div class="card-footer">
-                        <p class="price">100.50 €</p>
-                        <button class="add-btn" onclick="ajouterAuPanier('Nike Tempo', 100.50)">
-                            <i class="fas fa-shopping-basket"></i>
-                        </button>
-                    </div>
-                </div>
-            </article>
-
-            </div>
+        <div class="products-grid" id="products-grid">
+            <!-- SKELETONS (Chargement) -->
+            <script>
+                // Génère 8 cartes skeleton pour le chargement initial
+                const skeletonHTML = `
+                    <article class="skeleton-card">
+                        <div class="skeleton skeleton-img"></div>
+                        <div class="info">
+                            <div class="skeleton skeleton-title"></div>
+                            <div class="skeleton skeleton-subtitle"></div>
+                            <div class="skeleton-footer">
+                                <div class="skeleton skeleton-price"></div>
+                                <div class="skeleton skeleton-btn"></div>
+                            </div>
+                        </div>
+                    </article>
+                `;
+                document.write(skeletonHTML.repeat(8));
+            </script>
+        </div>
     </section>
 
     
@@ -185,6 +74,7 @@
             <a href="conditions.html">Conditions d'utilisation</a>
             <a href="politique.html">Politique de confidentialité</a>
             <a href="contact.html">Contact</a>
+            <a href="admin.html" id="admin-link" style="opacity: 0.5; display: none;"><i class="fas fa-lock"></i> Admin</a>
         </div>
     </footer>
 
@@ -235,6 +125,35 @@
     </body>
 
     <script>
+       // --- GESTION AVANCÉE DU THÈME (V5.3) ---
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeIcon(isLight);
+        }
+
+        function updateThemeIcon(isLight) {
+            const themeIcon = document.querySelector('.theme-btn i');
+            if(themeIcon) themeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            let isLight;
+
+            if (savedTheme) { // 1. Priorité au choix de l'utilisateur
+                isLight = savedTheme === 'light';
+            } else { // 2. Sinon, détection du système
+                isLight = window.matchMedia && !window.matchMedia('(prefers-color-scheme: dark)').matches;
+            }
+
+            if (isLight) document.body.classList.add('light-mode');
+            updateThemeIcon(isLight);
+        }
+        initializeTheme(); // Appel immédiat pour éviter le flash de couleur
+
+       let allProducts = []; // Stocke tous les produits pour le tri et la recherche
        let panier = []; 
 
         function ajouterAuPanier(nom, prix) {
@@ -249,6 +168,13 @@
             const produit = { nom: nom, prix: prix };
             panier.push(produit);
             majAffichage();
+        }
+
+        // --- FONCTION VOIR DÉTAILS (V5.0) ---
+        function voirDetails(nom, prix, img, badgeClass, badgeText, desc) {
+            const product = { nom, prix, img, badgeClass, badgeText, desc };
+            localStorage.setItem('selectedProduct', JSON.stringify(product));
+            window.location.href = "details.html";
         }
 
         function supprimerProduit(index) {
@@ -410,74 +336,130 @@
             }, 2500); // Délai de 2.5 secondes pour faire réaliste
         }
 
-        // GESTION DU HEADER (LOGIN / LOGOUT)
+        // --- INITIALISATION DE LA PAGE ---
         document.addEventListener("DOMContentLoaded", function() {
+            // Gérer le bouton de connexion/déconnexion
             const currentUser = localStorage.getItem('currentUser');
-            const loginBtn = document.querySelector('.btn-login');
+            
+            // Affiche le lien Admin seulement si c'est Jeddy
+            if (currentUser === 'Jeddy') {
+                document.getElementById('admin-link').style.display = 'inline';
+            }
 
+            const loginBtn = document.querySelector('.btn-login');
             if (currentUser && loginBtn) {
                 loginBtn.textContent = "Se déconnecter (" + currentUser + ")";
                 loginBtn.href = "#";
                 loginBtn.style.backgroundColor = "#dc3545"; // Rouge pour déconnexion
                 loginBtn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    if(confirm("Voulez-vous vous déconnecter ?")) {
-                        localStorage.removeItem('currentUser');
-                        window.location.reload();
-                    }
+                    if(confirm("Voulez-vous vous déconnecter ?")) { 
+                        localStorage.removeItem('currentUser'); 
+                        localStorage.removeItem('remembered_email'); // On oublie l'email
+                        window.location.reload(); }
                 });
             }
 
-            // GESTION DU MENU BURGER
+            // Gérer le menu burger
             const hamburger = document.querySelector('.hamburger');
             const navLinks = document.querySelector('.nav-links');
-
             if(hamburger) {
-                hamburger.addEventListener('click', () => {
-                    navLinks.classList.toggle('active');
-                    // Change l'icône
-                    const icon = hamburger.querySelector('i');
-                    icon.classList.toggle('fa-bars');
-                    icon.classList.toggle('fa-times');
+                hamburger.addEventListener('click', () => { navLinks.classList.toggle('active'); hamburger.querySelector('i').classList.toggle('fa-bars'); hamburger.querySelector('i').classList.toggle('fa-times'); });
+                document.querySelectorAll('.nav-links a, .nav-links button').forEach(item => {
+                    item.addEventListener('click', () => { navLinks.classList.remove('active'); const icon = hamburger.querySelector('i'); if(icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); } });
                 });
             }
 
-            // --- FONCTIONNALITÉS V4.0 (RECHERCHE & TRI) ---
+            // Charger les produits et configurer les filtres
+            initialiserBoutique();
 
-            // 1. Recherche dynamique
+            // Configurer la recherche
             const searchInput = document.getElementById('search-input');
             searchInput.addEventListener('keyup', function(e) {
                 const term = e.target.value.toLowerCase();
-                const cards = document.querySelectorAll('.card');
-
-                cards.forEach(card => {
-                    const title = card.querySelector('h3').innerText.toLowerCase();
-                    if(title.includes(term)) {
-                        card.style.display = 'flex'; // Affiche
-                    } else {
-                        card.style.display = 'none'; // Cache
-                    }
-                });
+                const produitsFiltres = allProducts.filter(p => p.nom.toLowerCase().includes(term));
+                renderProducts(produitsFiltres);
             });
-
-            // 2. Tri par prix
-            window.trierPrix = function(ordre) {
-                const grid = document.querySelector('.products-grid');
-                const cards = Array.from(grid.querySelectorAll('.card'));
-
-                cards.sort((a, b) => {
-                    // On récupère le prix (ex: "129.99 €" -> 129.99)
-                    const prixA = parseFloat(a.querySelector('.price').innerText.replace(' €', ''));
-                    const prixB = parseFloat(b.querySelector('.price').innerText.replace(' €', ''));
-
-                    return ordre === 'asc' ? prixA - prixB : prixB - prixA;
-                });
-
-                // On réinjecte les cartes triées
-                grid.innerHTML = "";
-                cards.forEach(card => grid.appendChild(card));
-            };
         });
+
+                // Gestion du rétrécissement du header au scroll (V5.4)
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header-pro');
+            if (window.scrollY > 50) { // Se déclenche après 50px de scroll
+                header.classList.add('shrink');
+            } else {
+                header.classList.remove('shrink');
+            }
+        });
+
+
+
+
+
+
+        function initialiserBoutique() {
+            // Produits statiques de la page
+            const staticProducts = [
+                { nom: 'Nike Air Zoom Pegasus 42', prix: 129.99, img: 'iimage/nikezoompegaus42.jpeg', badgeClass: 'card-red', badgeText: 'NOUVEAU' },
+                { nom: 'Nike Air Zoom Fly 6', prix: 110.00, img: 'iimage/nike.zoomfly6.webp', badgeClass: 'card-orange', badgeText: 'PROMO' },
+                { nom: 'Nike Air Zoom Vomero 5', prix: 129.00, img: 'iimage/vomero5.jpeg', badgeClass: 'card-green', badgeText: 'COLLECTION' },
+                { nom: 'Nike Air Zoom Alphafly 3', prix: 129.80, img: 'iimage/alphaly3.jpeg', badgeClass: 'card-purple', badgeText: 'LIMITED' },
+                { nom: 'Nike Air Zoom Structure 26', prix: 100.00, img: 'iimage/zoomstructure26.jpeg', badgeClass: 'card-red', badgeText: 'NOUVEAU' },
+                { nom: 'Nike Air Zoom Vomero 18', prix: 120.89, img: 'iimage/nikezoomvomero18.jpeg', badgeClass: 'card-orange', badgeText: 'PROMO' },
+                { nom: 'Nike Air Zoom Spiridon', prix: 90.00, img: 'iimage/spiridoncage 2.jpeg', badgeClass: 'card-green', badgeText: 'COLLECTION' },
+                { nom: 'Nike Air Zoom Tempo%', prix: 100.50, img: 'iimage/tempo.jpeg', badgeClass: 'card-purple', badgeText: 'LIMITED' }
+            ];
+
+            // Produits dynamiques de l'admin
+            const dynamicProducts = JSON.parse(localStorage.getItem('mizan_products') || '[]');
+
+            // Fusion des deux listes
+            allProducts = [...staticProducts, ...dynamicProducts];
+
+            // Simulation d'un temps de chargement réseau
+            setTimeout(() => {
+                renderProducts(allProducts);
+            }, 800); // 0.8 seconde
+        }
+
+        function renderProducts(productsToRender) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = ""; // Vide la grille (supprime les skeletons ou les anciens produits)
+
+            if (productsToRender.length === 0) {
+                grid.innerHTML = `<p style="color: var(--text-gray); grid-column: 1 / -1; text-align: center;">Aucun produit ne correspond à votre recherche.</p>`;
+                return;
+            }
+
+            productsToRender.forEach(p => {
+                const productHTML = `
+                <article class="card ${p.badgeClass}">
+                    <span class="badge">${p.badgeText}</span>
+                    <div class="img-container" onclick="voirDetails('${p.nom.replace(/'/g, "\\'")}', ${p.prix}, '${p.img}', '${p.badgeClass}', '${p.badgeText}', '${(p.desc || "").replace(/'/g, "\\'")}')" style="cursor: pointer;">
+                        <img src="${p.img}" alt="${p.nom}" loading="lazy" decoding="async" onerror="this.src='iimage/nikezoompegaus42.jpeg'"> <!-- Image par défaut si erreur -->
+                    </div>
+                    <div class="info">
+                        <h3>${p.nom}</h3>
+                        <div class="card-footer">
+                            <p class="price">${p.prix.toFixed(2)} €</p>
+                            <button class="add-btn" onclick="ajouterAuPanier('${p.nom}', ${p.prix})">
+                                <i class="fas fa-shopping-basket"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                `;
+                grid.innerHTML += productHTML;
+            });
+        }
+
+        // Fonction de tri (maintenant globale)
+        function trierPrix(ordre) {
+            allProducts.sort((a, b) => {
+                return ordre === 'asc' ? a.prix - b.prix : b.prix - a.prix;
+            });
+            renderProducts(allProducts); // Ré-affiche les produits triés
+        }
     </script>
 
 </body>

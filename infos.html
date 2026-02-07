@@ -20,52 +20,42 @@
                     <li><a href="produits.html">Produits</a></li>
                     <li><a href="connexion.html" class="btn-login">Se connecter</a></li>
                 </ul>
+                <button onclick="toggleTheme()" class="theme-btn"><i class="fas fa-sun"></i></button>
                 <div class="hamburger">
                     <i class="fas fa-bars"></i>
                 </div>
             </div>
         </nav>
     </header>
-    <main class="login-container">
-        <div class="login-card" style="max-width: 600px;">
+    <main class="login-container" style="padding-top: 120px; padding-bottom: 50px;">
+        <div class="login-card" style="max-width: 500px;">
             <div class="login-content">
-            <h2>Informations <span>Étudiant</span></h2>
+            <h2>Créer votre <span>Compte</span></h2>
+            <p class="subtitle">Rejoignez la communauté et profitez d'avantages exclusifs.</p>
 
             <form class="infos-form" style="background: none; box-shadow: none; padding: 0; width: 100%;">
-            <fieldset>
-                <legend>Information Personnelle</legend>
-                <input type="text" id="reg-nom" placeholder="Nom (Sera votre identifiant)" required>
-                <input type="password" id="reg-mdp" placeholder="Créer un mot de passe" required>
-                <input type="password" id="reg-mdp-confirm" placeholder="Confirmer le mot de passe" required>
-                <input type="text" placeholder="Prénom">
-            
-                <div class="gender-box">
-                    <span>Genre :</span>
-                    <input type="radio" name="genre" id="f"> <label for="f">Fille</label>
-                    <input type="radio" name="genre" id="g"> <label for="g">Garçon</label>
+                <div class="input-box">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="reg-nom" placeholder="Ex: Jeddy" required>
                 </div>
-            
-                <input type="text" placeholder="Lieu de naissance">
-                <textarea placeholder="Votre adresse complète"></textarea>
-            </fieldset>
-
-            <fieldset>
-                <legend>Scolarité</legend>
-                <select>
-                    <option>Niveau d'étude</option>
-                    <option>Lycée</option>
-                    <option>Universitaire</option>
-                </select>
-            
-                <div class="skills-box">
-                    <p>Compétences :</p>
-                    <label><input type="checkbox"> Programmation</label>
-                    <label><input type="checkbox"> Design UI/UX</label>
+                <div class="input-box">
+                    <label>Adresse e-mail</label>
+                    <input type="email" id="reg-email" placeholder="votre@email.com" required>
                 </div>
-            </fieldset>
-
-            <button type="submit" class="btn-glow">Finaliser mon inscription</button>
+                <div class="input-box">
+                    <label>Mot de passe</label>
+                    <input type="password" id="reg-mdp" placeholder="Au moins 6 caractères" required>
+                </div>
+                <div class="input-box">
+                    <label>Confirmer le mot de passe</label>
+                    <input type="password" id="reg-mdp-confirm" placeholder="Retapez votre mot de passe" required>
+                </div>
+                <button type="submit" class="btn-glow" style="margin-top: 20px;">Créer mon compte</button>
             </form>
+
+            <div class="login-footer" style="margin-top: 25px;">
+                <p>Déjà un compte ? <a href="connexion.html">Se connecter</a></p>
+            </div>
             </div>
         </div>
     </main>
@@ -80,34 +70,68 @@
     </footer>
 
     <script>
+        // GESTION DU THÈME
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            const btn = document.querySelector('.theme-btn i');
+            if(btn) btn.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        if(localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }
+
+        // Icône thème au chargement
+        if(localStorage.getItem('theme') === 'light') {
+            const btn = document.querySelector('.theme-btn i');
+            if(btn) btn.className = 'fas fa-moon';
+        }
+
         // Gestion de l'inscription
         document.querySelector('.infos-form').addEventListener('submit', function(e) {
             e.preventDefault(); // Empêche l'envoi classique du formulaire
-
-            const nom = document.getElementById('reg-nom').value;
+            
+            const nom = document.getElementById('reg-nom').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
             const mdp = document.getElementById('reg-mdp').value;
             const mdpConfirm = document.getElementById('reg-mdp-confirm').value;
 
-            if(nom && mdp && mdpConfirm) {
-                if(mdp !== mdpConfirm) {
-                    alert("Les mots de passe ne correspondent pas !");
-                    return;
-                }
-
-                // On récupère les utilisateurs existants ou on crée une liste vide
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                
-                // On ajoute le nouvel utilisateur
-                users.push({ username: nom, password: mdp });
-                
-                // On sauvegarde dans le navigateur
-                localStorage.setItem('users', JSON.stringify(users));
-
-                alert("Inscription réussie ! Vous allez être redirigé vers la page de connexion.");
-                window.location.href = "connexion.html";
-            } else {
-                alert("Veuillez remplir tous les champs obligatoires.");
+            if(!nom || !email || !mdp || !mdpConfirm) {
+                alert("Veuillez remplir tous les champs.");
+                return;
             }
+
+            if(mdp.length < 6) {
+                alert("Le mot de passe doit contenir au moins 6 caractères.");
+                return;
+            }
+
+            if(mdp !== mdpConfirm) {
+                alert("Les mots de passe ne correspondent pas !");
+                return;
+            }
+
+            // On récupère les utilisateurs existants ou on crée une liste vide
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Vérifier si le nom d'utilisateur ou l'email existe déjà
+            const userExists = users.some(u => u.username.toLowerCase() === nom.toLowerCase());
+            const emailExists = users.some(u => u.email && u.email.toLowerCase() === email.toLowerCase());
+
+            if (userExists) {
+                alert("Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.");
+                return;
+            }
+
+            if (emailExists) {
+                alert("Cette adresse e-mail est déjà utilisée. Veuillez vous connecter ou en utiliser une autre.");
+                return;
+            }
+            
+            users.push({ username: nom, email: email, password: mdp });
+            localStorage.setItem('users', JSON.stringify(users));
+
+            alert("Inscription réussie ! Vous allez être redirigé vers la page de connexion.");
+            window.location.href = "connexion.html";
         });
 
         // GESTION DU MENU BURGER
@@ -122,7 +146,26 @@
                 icon.classList.toggle('fa-bars');
                 icon.classList.toggle('fa-times');
             });
+
+            // Fermeture auto
+            document.querySelectorAll('.nav-links a, .nav-links button').forEach(item => {
+                item.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    const icon = hamburger.querySelector('i');
+                    if(icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
+                });
+            });
         }
+
+        // Gestion du rétrécissement du header au scroll (V5.4)
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header-pro');
+            if (window.scrollY > 50) { // Se déclenche après 50px de scroll
+                header.classList.add('shrink');
+            } else {
+                header.classList.remove('shrink');
+            }
+        });
     </script>
 </body>
-</html>    
+</html>

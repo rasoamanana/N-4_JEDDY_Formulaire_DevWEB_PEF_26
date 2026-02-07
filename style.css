@@ -49,6 +49,86 @@ body {
     animation: fadeInPage 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); /* Animation fluide au chargement */
 }
 
+/* --- TRANSITION FLUIDE GLOBALE (V5.0) --- */
+body, .header-pro, .card, .login-card, .infos-form, input, select, textarea, li, .logo, h1, h2, h3, p, strong, span, i, .btn-glow, .modal-content, .nav-links, .detail-card, .shop-controls {
+     transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* --- CONFIGURATION MODE CLAIR (GLOBAL) --- */
+body.light-mode {
+    --dark-bg: #f8fafc;        /* Fond très clair (Slate 50) */
+    --card-bg: #ffffff;        /* Cartes blanches */
+    --input-bg: #f1f5f9;       /* Inputs gris clair (Slate 100) */
+    --text-white: #0f172a;     /* Texte sombre (Slate 900) */
+    --text-gray: #475569;      /* Gris moyen (Slate 600) */
+    --border-color: #cbd5e1;   /* Bordures visibles (Slate 300) */
+}
+
+/* Ajustements spécifiques mode clair */
+body.light-mode .header-pro { 
+    background: rgba(255, 255, 255, 0.85); 
+    border-bottom: 1px solid #e2e8f0; 
+}
+body.light-mode .logo { color: #0f172a; }
+body.light-mode .hamburger { color: #0f172a; }
+
+/* Menu Mobile Mode Clair */
+body.light-mode .nav-links {
+    background: rgba(255, 255, 255, 0.98);
+}
+body.light-mode .nav-links a { color: #334155; }
+body.light-mode .nav-links a:hover, body.light-mode .nav-links a.active { color: var(--primary-blue); }
+
+/* Cartes et Conteneurs en Mode Clair */
+body.light-mode .card,
+body.light-mode .login-card,
+body.light-mode .infos-form,
+body.light-mode .detail-card,
+body.light-mode .shop-controls,
+body.light-mode .modal-content {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: #e2e8f0;
+}
+
+/* Inputs en mode clair */
+body.light-mode input, 
+body.light-mode select, 
+body.light-mode textarea {
+    color: #0f172a;
+    background: #f1f5f9;
+}
+body.light-mode p {
+    color: #0f172a;
+}
+
+
+/* Footer en mode clair */
+body.light-mode .login-footer-main {
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* --- HERO SECTION MODE CLAIR --- */
+body.light-mode .hero-section {
+    background: radial-gradient(circle at 20% 50%, #f8fafc 0%, #e2e8f0 100%);
+}
+
+body.light-mode .hero-text h1 {
+    color: var(--text-white);
+}
+
+body.light-mode .text-gradient {
+    background: linear-gradient(135deg, #0f172a 0%, var(--primary-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .btn-secondary {
+    background: rgba(0,0,0,0.05);
+    color: #0f172a;
+    border-color: rgba(0,0,0,0.1);
+}
+
 /* --- HEADER PROFESSIONNEL --- */
 .header-pro {
     position: fixed;
@@ -62,6 +142,18 @@ body {
     padding: 0 20px;
     transition: all 0.3s ease;
 }
+
+/* Style pour le header réduit */
+.header-pro.shrink {
+    height: 60px; /* Hauteur réduite */
+    padding: 0 15px; /* Padding réduit */
+}
+
+.header-pro.shrink .navbar {
+    height: 60px; /* Hauteur de la navbar réduite */
+}
+
+.header-pro.shrink .logo { font-size: 1.3rem; }
 
 .navbar {
     display: flex;
@@ -104,6 +196,22 @@ body {
     align-items: center;
     gap: 40px;
     position: relative; /* Pour le positionnement du menu mobile */
+}
+
+/* BOUTON THÈME (Position Pro) */
+.theme-btn {
+    background: transparent;
+    border: 1px solid var(--primary-blue);
+    color: var(--primary-blue);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
 }
 
 /* Liens de navigation */
@@ -156,7 +264,7 @@ body {
     background: var(--primary-blue); /* Couleur pleine pour faire "Bouton Normal" */
     color: var(--dark-bg); /* Texte foncé pour le contraste */
     border: none;
-    border-radius: 50px; /* Forme pilule très moderne */
+    border-radius: 20px; /* Forme pilule très moderne */
     font-weight: 700;
     font-size: 0.95rem;
     text-decoration: none;
@@ -168,6 +276,13 @@ body {
     gap: 10px;
     box-shadow: 0 4px 10px rgba(56, 189, 248, 0.3);
 }
+.nav-links .btn-login {
+     padding: 12px 28px;
+     background: var(--primary-blue); /* Couleur pleine pour faire "Bouton Normal" */
+     color: var(--dark-bg); /* Texte foncé pour le contraste */
+     box-shadow: 0 4px 10px rgba(56, 189, 248, 0.3);
+ }
+
 
 /* Ajout automatique de l'icône utilisateur via CSS */
 .btn-login::before {
@@ -177,11 +292,28 @@ body {
     font-size: 1em;
 }
 
+.nav-links .btn-login::before {
+     content: '\f007'; /* Code de l'icône User FontAwesome */
+     font-family: "Font Awesome 6 Free";
+     font-weight: 900;
+     font-size: 1em;
+ }
+
 .btn-login:hover {
     background: #7dd3fc; /* Un peu plus clair au survol */
     color: var(--dark-bg);
     box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
     transform: translateY(-2px);
+}
+.nav-links .btn-login:hover {
+     background: #7dd3fc; /* Un peu plus clair au survol */
+     color: var(--dark-bg);
+     box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+     }
+
+/* Supprime le soulignement bleu sur le bouton Login */
+.nav-links .btn-login::after {
+    display: none;
 }
 
 /* --- MENU BURGER (MOBILE) --- */
@@ -243,6 +375,23 @@ body {
     .nav-right-group { gap: 15px; }
 }
 
+/* --- ANIMATION MENU MOBILE (Cascade) --- */
+@media (max-width: 900px) {
+    .nav-links li {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+    }
+    .nav-links.active li {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .nav-links.active li:nth-child(1) { transition-delay: 0.1s; }
+    .nav-links.active li:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.active li:nth-child(3) { transition-delay: 0.3s; }
+    .nav-links.active li:nth-child(4) { transition-delay: 0.4s; }
+}
+
 /* --- HERO SECTION --- */
 .hero-section {
     min-height: 100vh; /* S'adapte si le contenu dépasse */
@@ -290,7 +439,7 @@ body {
     font-weight: 900;
     margin-bottom: 25px;
     letter-spacing: -2px; /* Lettres plus serrées pour le style sport */
-    color: white;
+    color: var(--text-white); /* Utilise la variable pour s'adapter au mode clair */
 }
 
 .text-gradient {
@@ -625,6 +774,36 @@ body {
     outline: none;
     border-color: var(--primary-blue);
     box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+}
+
+/* --- OPTIONS FORMULAIRE (V6.2) --- */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    cursor: pointer;
+    user-select: none; /* Empêche la sélection du texte */
+}
+
+.remember-me input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--primary-blue); /* Colore la case cochée */
+    cursor: pointer;
+}
+
+.form-options a:hover {
+    text-decoration: underline;
 }
 
 /* --- BOUTON --- */
